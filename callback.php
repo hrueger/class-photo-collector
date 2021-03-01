@@ -34,7 +34,16 @@ if (isset($_REQUEST["error"])) {
     // store the token and redirect to index.php
     $_SESSION["token"] = $bearertoken;
     $_SESSION["loggedin"] = true;
-    redirect("index.php");
+
+    // load user data
+    $data = request('/me?$select=department,displayName,jobTitle,mail');
+    $_SESSION["job"] = $data["jobTitle"];
+    $_SESSION["username"] = $data["displayName"];
+    $_SESSION["email"] = $data["mail"];
+
+    var_pre_dump($data);
+
+    // redirect("index.php");
 }
 ?>
 Error
