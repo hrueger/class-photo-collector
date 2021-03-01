@@ -28,6 +28,18 @@ function isLoggedin() {
     return (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]);
 }
 
+function ensureLoggedin() {
+    if (!isLoggedin()) { redirect("index.php"); }
+}
+
+function ensureTeacher() {
+    if ($_SESSION["job"] !== "Lehrer") { redirect("index.php"); }
+}
+
+function ensureStudent() {
+    if ($_SESSION["job"] !== "Schueler") { redirect("index.php"); }
+}
+
 function request($url) {
     $ch = curl_init("https://graph.microsoft.com/v1.0/".$url);
     $User_Agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0";

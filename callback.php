@@ -46,12 +46,18 @@ if (isset($_REQUEST["error"])) {
         $_SESSION["job"] = $data["jobTitle"];
         $_SESSION["username"] = $data["displayName"];
         $_SESSION["email"] = $data["mail"];
+        $_SESSION["class"] = $data["department"];
         $statement = $db->prepare("INSERT INTO users (microsoft_id, class, photo_state, email, username, job) VALUES (?, ?, ?, ?, ?, ?)");
         $statement->execute(array($data["id"], $data["department"], $PHOTO_STATES["MISSING"], $data["mail"], $data["displayName"], $data["jobTitle"]));
+        $_SESSION["photo_state"] = $PHOTO_STATES["MISSING"];
+        $_SESSION["id"] = $db->lastInsertId();
     } else {
         $_SESSION["job"] = $users[0]["job"];
         $_SESSION["username"] = $users[0]["username"];
         $_SESSION["email"] = $users[0]["email"];
+        $_SESSION["photo_state"] = $users[0]["photo_state"];
+        $_SESSION["class"] = $users[0]["class"];
+        $_SESSION["id"] = $users[0]["id"];
     }
 
     redirect("index.php");

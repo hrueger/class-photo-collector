@@ -10,7 +10,7 @@
             <li class="nav-item">
               <a href="index.php" class="nav-link <?php onPageActive("index.php") ?>">Home</a>
             </li>
-            <?php if (isLoggedin()) { ?>
+            <?php if (isLoggedin() && $_SESSION["job"] == "Lehrer") { ?>
               <li class="nav-item" data-turbolinks="false">
                 <a href="classes.php" class="nav-link <?php onPageActive("classes.php") ?>">Klassen</a>
               </li>
