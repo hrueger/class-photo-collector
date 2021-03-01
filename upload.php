@@ -2,7 +2,7 @@
 <?php ensureLoggedin() ?>
 <?php ensureStudent() ?>
 
-
+<?php ensureCanUpload(); ?>
 
 <?php
 $error = "";

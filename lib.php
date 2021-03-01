@@ -8,7 +8,8 @@ $PHOTO_STATES = [];
 $PHOTO_STATES["MISSING"] = 0;
 $PHOTO_STATES["UPLOADED"] = 1;
 $PHOTO_STATES["ACCEPTED"] = 2;
-$PHOTO_STATES["REJECTED"] = 3;
+$PHOTO_STATES["PHOTO_REJECTED"] = 3;
+$PHOTO_STATES["PRIVACY_REJECTED"] = 4;
 
 
 error_reporting(-1);
@@ -34,6 +35,11 @@ function ensureLoggedin() {
 
 function ensureTeacher() {
     if ($_SESSION["job"] !== "Lehrer") { redirect("index.php"); }
+}
+
+function ensureCanUpload() {
+    global $PHOTO_STATES;
+    if (!in_array($_SESSION["photo_state"], array($PHOTO_STATES["MISSING"], $PHOTO_STATES["PHOTO_REJECTED"], $PHOTO_STATES["PRIVACY_REJECTED"]))) { redirect("index.php"); }
 }
 
 function ensureStudent() {
