@@ -8,11 +8,11 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-              <a href="index.php" class="nav-link <?php $_SERVER['REQUEST_URI'] == 'index.php' ? ' active' : '' ?>">Home</a>
+              <a href="index.php" class="nav-link <?php onPageActive("index.php") ?>">Home</a>
             </li>
             <?php if (isLoggedin()) { ?>
               <li class="nav-item" data-turbolinks="false">
-                <a href="classes.php" class="nav-link <?php $_SERVER['REQUEST_URI'] == '/calendar' ? ' active' : ''?>">Calendar</a>
+                <a href="classes.php" class="nav-link <?php onPageActive("classes.php") ?>">Klassen</a>
               </li>
             <?php } ?>
           </ul>

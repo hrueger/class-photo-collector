@@ -20,6 +20,10 @@ function redirect($u) {
     exit();
 }
 
+function onPageActive($url) {
+    echo str_ends_with($_SERVER['REQUEST_URI'], $url) ? ' active' : '';
+}
+
 function isLoggedin() {
     return (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"]);
 }
