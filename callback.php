@@ -1,5 +1,7 @@
 <pre><?php
 require_once("./lib.php");
+
+// Check for errors and display them
 if (isset($_REQUEST["error"])) {
     echo "<pre>".$_REQUEST["error"]."</pre>";
     if (isset($_REQUEST["error_description"])) {
@@ -9,7 +11,15 @@ if (isset($_REQUEST["error"])) {
         echo "<pre>".$_REQUEST["error_uri"]."</pre>";
     }
     exit();
+
+// if everythink worked, we get a code and the state
 } else if (isset($_REQUEST["code"])) {
+    // state must match the stored state
+    if (!isset($_REQUEST["state"]) || $_REQUEST["state"] !== $_SESSION["state"]) {
+        print "error: state does not exist or match";
+        exit();
+    }
+    // get the jwt token by using the auth code
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL,"https://login.microsoftonline.com/".$_ENV["OAUTH_TENANT_ID"]."/oauth2/v2.0/token");
     curl_setopt($ch, CURLOPT_POST, 1);
@@ -21,6 +31,7 @@ if (isset($_REQUEST["error"])) {
     $jsonoutput = json_decode($server_output, true);
     $bearertoken = $jsonoutput["access_token"];
 
+    // store the token and redirect to index.php
     $_SESSION["token"] = $bearertoken;
     $_SESSION["loggedin"] = true;
     redirect("index.php");
