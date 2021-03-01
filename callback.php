@@ -41,9 +41,7 @@ if (isset($_REQUEST["error"])) {
     $_SESSION["username"] = $data["displayName"];
     $_SESSION["email"] = $data["mail"];
 
-    var_pre_dump($data);
-
-    // redirect("index.php");
+    redirect("index.php");
 }
 ?>
 Error
