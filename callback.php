@@ -11,7 +11,7 @@ if (isset($_REQUEST["error"])) {
     exit();
 } else if (isset($_REQUEST["code"])) {
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL,$_ENV["OAUTH_AUTHORITY"].$_ENV["OAUTH_TOKEN_ENDPOINT"]);
+    curl_setopt($ch, CURLOPT_URL,"https://login.microsoftonline.com/".$_ENV["OAUTH_TENANT_ID"]."/oauth2/v2.0/token");
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS,
     "grant_type=authorization_code&client_id=".$_ENV["OAUTH_APP_ID"]."&redirect_uri=".$_ENV["OAUTH_REDIRECT_URI"]."&code=".$_REQUEST["code"]."&client_secret=".urlencode($_ENV["OAUTH_APP_SECRET"]));
@@ -19,7 +19,7 @@ if (isset($_REQUEST["error"])) {
     $server_output = curl_exec($ch);
     curl_close ($ch);
     $jsonoutput = json_decode($server_output, true);
-    $bearertoken = $jsonoutput['access_token'];
+    $bearertoken = $jsonoutput["access_token"];
 
     $_SESSION["token"] = $bearertoken;
     $_SESSION["loggedin"] = true;
