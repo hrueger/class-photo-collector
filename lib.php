@@ -1,7 +1,14 @@
 <?php
 
 require_once("./secret.php");
+require_once("./db.php");
 session_start();
+
+$PHOTO_STATES = [];
+$PHOTO_STATES["MISSING"] = 0;
+$PHOTO_STATES["UPLOADED"] = 1;
+$PHOTO_STATES["ACCEPTED"] = 2;
+$PHOTO_STATES["REJECTED"] = 3;
 
 
 error_reporting(-1);

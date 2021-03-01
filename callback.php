@@ -36,10 +36,23 @@ if (isset($_REQUEST["error"])) {
     $_SESSION["loggedin"] = true;
 
     // load user data
-    $data = request('/me?$select=department,displayName,jobTitle,mail');
-    $_SESSION["job"] = $data["jobTitle"];
-    $_SESSION["username"] = $data["displayName"];
-    $_SESSION["email"] = $data["mail"];
+    $data = request('/me?$select=id');
+    $statement = $db->prepare("SELECT * FROM users WHERE microsoft_id=?");
+    $statement->execute(array($data["id"]));   
+
+    $users = $statement->fetchAll();
+    if (count($users) == 0) {
+        $data = request('/me?$select=id,department,displayName,jobTitle,mail');
+        $_SESSION["job"] = $data["jobTitle"];
+        $_SESSION["username"] = $data["displayName"];
+        $_SESSION["email"] = $data["mail"];
+        $statement = $db->prepare("INSERT INTO users (microsoft_id, class, photo_state, email, username, job) VALUES (?, ?, ?, ?, ?, ?)");
+        $statement->execute(array($data["id"], $data["department"], $PHOTO_STATES["MISSING"], $data["mail"], $data["displayName"], $data["jobTitle"]));
+    } else {
+        $_SESSION["job"] = $users[0]["job"];
+        $_SESSION["username"] = $users[0]["username"];
+        $_SESSION["email"] = $users[0]["email"];
+    }
 
     redirect("index.php");
 }
