@@ -9,3 +9,7 @@ body {
 .userimg-small {
     height: 3rem;
 }
+
+.cursor-pointer {
+    cursor: pointer;
+}
