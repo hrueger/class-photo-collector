@@ -53,6 +53,12 @@ function ensureStudent() {
     if ($_SESSION["job"] !== "Schueler") { redirect("index.php"); }
 }
 
+function ensureCanViewPhotosOfClass($className) {
+    $classes = getClassesFlat();
+    $class = $classes[array_search($className, array_column($classes, 0))];
+    if (!canViewPhotosOfClass($class)) { redirect("index.php"); }
+}
+
 function getMySafeUsername() {
     $safeUsername = str_replace("@allgaeugymnasium.onmicrosoft.com", "", $_SESSION["email"]);
     return str_replace(".", " ", $safeUsername);
@@ -61,6 +67,43 @@ function getMySafeUsername() {
 function getSafeUsername($email) {
     $safeUsername = str_replace("@allgaeugymnasium.onmicrosoft.com", "", $email);
     return str_replace(".", " ", $safeUsername);
+}
+
+function canViewPhotosOfClass($class) {
+    $u = strtolower(str_replace("@allgaeugymnasium.onmicrosoft.com", "", $_SESSION["email"]));
+    if (in_array($u, $_ENV["ADMINS"])) {
+        return true;
+    }
+    return in_array($u, array($class[2], $class[3]));
+    
+}
+
+function getClasses() {
+    $classes = array();    
+    $i = 0;
+    $jgst = "5";
+    if (($h = fopen("grades.csv", "r")) !== FALSE) {
+      while (($data = fgetcsv($h, 1000, ",")) !== FALSE)   {
+        if (!str_starts_with($data[0], $jgst) || ($jgst == 1 ? !str_starts_with($data[0], $jgst."0") : false)) {
+          $i++;
+          $jgst = $data[0][0];
+        }
+        $classes[$i][] = $data;
+      }
+      fclose($h);
+    }
+    return $classes;
+}
+
+function getClassesFlat() {
+    $classes = array();
+    if (($h = fopen("grades.csv", "r")) !== FALSE) {
+      while (($data = fgetcsv($h, 1000, ",")) !== FALSE)   {
+        $classes[] = $data;
+      }
+      fclose($h);
+    }
+    return $classes;
 }
 
 function serveFile($filepath) {
