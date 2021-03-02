@@ -11,6 +11,25 @@ $classes = getClasses();
 <div class="jumbotron">
   <?php if (isset($_GET["class"])) {
     ensureCanViewPhotosOfClass($_GET["class"]);
+
+
+    if (isset($_POST["id"])) {
+      if (isset($_POST["accept"])) {
+        $statement = $db->prepare("UPDATE users SET photo_state = ? WHERE id = ?");
+        $statement->execute(array($PHOTO_STATES["ACCEPTED"], $_SESSION["id"]));
+
+      } else if (isset($_POST["rejectPhoto"])) {
+        $statement = $db->prepare("UPDATE users SET photo_state = ? WHERE id = ?");
+        $statement->execute(array($PHOTO_STATES["PHOTO_REJECTED"], $_SESSION["id"]));
+
+      } else if (isset($_POST["rejectPrivacy"])) {
+        $statement = $db->prepare("UPDATE users SET photo_state = ? WHERE id = ?");
+        $statement->execute(array($PHOTO_STATES["PRIVACY_REJECTED"], $_SESSION["id"]));
+      } else if (isset($_POST["waiting"])) {
+        $statement = $db->prepare("UPDATE users SET photo_state = ? WHERE id = ?");
+        $statement->execute(array($PHOTO_STATES["UPLOADED"], $_SESSION["id"]));
+      }
+    }
   ?>
     <h1>Klasse <?php echo htmlspecialchars($_GET["class"]); ?>:</h1>
     <a class="btn btn-outline-primary" href="classes.php"><i class="fas fa-arrow-back"></i> Zurück</a>
@@ -38,12 +57,32 @@ $classes = getClasses();
           <tr>
             <td><?php echo $user["username"]; ?></td>
             <td><?php echo $PHOTO_STATES_PRETTY[$user["photo_state"]]; ?></td>
-            <td><img class="d-block img-fluid userimg-small cursor-pointer" onclick="openModal('<?php echo $user['id']; ?>', '<?php echo $user['username']; ?>', 'privacy')" src="serveImage.php?type=privacy&userId=<?php echo $user["id"]; ?>"></td>
             <td><img class="d-block img-fluid userimg-small cursor-pointer" onclick="openModal('<?php echo $user['id']; ?>', '<?php echo $user['username']; ?>', 'photo')" src="serveImage.php?type=photo&userId=<?php echo $user["id"]; ?>"></td>
+            <td><img class="d-block img-fluid userimg-small cursor-pointer" onclick="openModal('<?php echo $user['id']; ?>', '<?php echo $user['username']; ?>', 'privacy')" src="serveImage.php?type=privacy&userId=<?php echo $user["id"]; ?>"></td>
             <td>
-              <a class="btn btn-outline-success"><i class="fas fa-check"></i></a>
-              <a class="btn btn-outline-danger"><i class="fas fa-user-times"></i></a>
-              <a class="btn btn-outline-danger"><i class="fas fa-file-alt"></i></a>
+              <form method="POST" class="d-inline">
+                <input type="hidden" name="id" value="<?php echo $user["id"]; ?>">
+                <input type="hidden" name="accept" value="true">
+                <button type="submit" class="btn btn-outline-success"><i class="fas fa-check"></i></button>
+              </form>
+              
+              <form method="POST" class="d-inline">
+                <input type="hidden" name="id" value="<?php echo $user["id"]; ?>">
+                <input type="hidden" name="waiting" value="true">
+                <button type="submit" class="btn btn-outline-primary"><i class="fas fa-clock"></i></button>
+              </form>
+
+              <form method="POST" class="d-inline">
+                <input type="hidden" name="id" value="<?php echo $user["id"]; ?>">
+                <input type="hidden" name="rejectPhoto" value="true">
+                <button type="submit" class="btn btn-outline-danger"><i class="fas fa-user-times"></i></button>
+              </form>
+              
+              <form method="POST" class="d-inline">
+                <input type="hidden" name="id" value="<?php echo $user["id"]; ?>">
+                <input type="hidden" name="rejectPrivacy" value="true">
+                <button type="submit" class="btn btn-outline-danger"><i class="fas fa-file-alt"></i></button>
+              </form>
             </td>
           </tr>
         <?php

@@ -46,11 +46,23 @@ function ensureTeacher() {
 
 function ensureCanUpload() {
     global $PHOTO_STATES;
-    if (!in_array($_SESSION["photo_state"], array($PHOTO_STATES["MISSING"], $PHOTO_STATES["PHOTO_REJECTED"], $PHOTO_STATES["PRIVACY_REJECTED"]))) { redirect("index.php"); }
+    if (!in_array(getMyPhotoState(), array($PHOTO_STATES["MISSING"], $PHOTO_STATES["PHOTO_REJECTED"], $PHOTO_STATES["PRIVACY_REJECTED"]))) { redirect("index.php"); }
 }
 
 function ensureStudent() {
     if ($_SESSION["job"] !== "Schueler") { redirect("index.php"); }
+}
+
+function getMyPhotoState() {
+    global $db;
+    $statement = $db->prepare("SELECT * FROM users WHERE id=?");
+    $statement->execute(array($_SESSION["id"]));   
+
+    $users = $statement->fetchAll();
+    if (count($users) == 0) {
+        return;
+    }
+    return $users[0]["photo_state"];
 }
 
 function ensureCanViewPhotosOfClass($className) {

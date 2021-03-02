@@ -7,17 +7,34 @@
   ?>
     <h4>Willkommen <?php echo $_SESSION["username"] ?>!</h4>
 
-    <?php if ($_SESSION["job"] == "Schueler") { ?>
-      <?php if ($_SESSION["photo_state"] == $PHOTO_STATES["MISSING"]) { ?>
+    <?php if ($_SESSION["job"] == "Schueler") {
+      if (getMyPhotoState() == $PHOTO_STATES["MISSING"]) { ?>
         <div class="alert alert-primary">
           <b>Status: Nicht hochgeladen</b><br>
           Du hast bisher noch kein Foto hochgeladen. Hole das jetzt nach: <br>
           <a href="upload.php" class="btn btn-outline-success mt-3">Foto hochladen</a>
         </div>
-        <?php } else if ($_SESSION["photo_state"] == $PHOTO_STATES["UPLOADED"]) { ?>
+      <?php } else if (getMyPhotoState() == $PHOTO_STATES["UPLOADED"]) { ?>
         <div class="alert alert-warning">
           <b>Status: Warten auf Überprüfung</b><br>
           Dein Foto wurde erfolgreich hochgeladen. Es wird nun überprüft. Dies kann durchaus einige Tage dauern.
+        </div>
+      <?php } else if (getMyPhotoState() == $PHOTO_STATES["ACCEPTED"]) { ?>
+        <div class="alert alert-success">
+          <b>Status: Akzeptiert</b><br>
+          Dein Foto wurde akzeptiert. Danke für's Hochladen!
+        </div>
+      <?php } else if (getMyPhotoState() == $PHOTO_STATES["PHOTO_REJECTED"]) { ?>
+        <div class="alert alert-danger">
+          <b>Status: Foto abgelehnt</b><br>
+          Dein Foto wurde leider nicht akzeptiert. Lade es erneut hoch und beachte die angegebenen Kriterien! <br>
+          <a href="upload.php" class="btn btn-outline-success mt-3">Foto hochladen</a>
+        </div>
+      <?php } else if (getMyPhotoState() == $PHOTO_STATES["PRIVACY_REJECTED"]) { ?>
+        <div class="alert alert-danger">
+          <b>Status: Datenschutzerklärung abgelehnt</b><br>
+          Du hast die Datenschutzerklärung nicht korrekt ausgefüllt. Lade dein Foto und die Datenschutzerklärung erneut hoch und beachte die angegebenen Kriterien! <br>
+          <a href="upload.php" class="btn btn-outline-success mt-3">Foto hochladen</a>
         </div>
       <?php } ?>
     <?php } else if ($_SESSION["job"] == "Lehrer") { ?>

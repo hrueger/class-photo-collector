@@ -43,7 +43,6 @@ if (isset($_POST["submit"])) {
 
   if ($error == "") {
     if (move_uploaded_file($_FILES["photo"]["tmp_name"], $target_photo) && move_uploaded_file($_FILES["privacy"]["tmp_name"], $target_privacy)) {
-      $_SESSION["photo_state"] = $PHOTO_STATES["UPLOADED"];
       
       $statement = $db->prepare("UPDATE users SET photo_state = ? WHERE id = ?");
       $statement->execute(array($PHOTO_STATES["UPLOADED"], $_SESSION["id"]));
@@ -81,25 +80,25 @@ if (isset($_POST["submit"])) {
 
 
   <form method="POST" enctype="multipart/form-data">
-    <div class="input-group mb-3">
-      <div class="input-group-prepend">
-        <span class="input-group-text">Portait:</span>
-      </div>
-      <div class="custom-file">
-        <input type="file" class="custom-file-input" name="photo" id="photoInput">
-        <label class="custom-file-label" for="photoInput">Datei wählen</label>
-      </div>
-    </div>
-    <div class="input-group mb-3">
-      <div class="input-group-prepend">
-        <span class="input-group-text">Datenschutzerklärung:</span>
-      </div>
-      <div class="custom-file">
-        <input type="file" class="custom-file-input" name="privacy" id="privacyInput">
-        <label class="custom-file-label" for="privacyInput">Datei wählen</label>
+    <!--<div class="input-group mb-3">
+      <div class="input-group-prepend">-->
+        <span class="">Portait:</span>
+      <!--</div>
+      <div class="custom-file">-->
+        <input type="file" class="" name="photo" id="photoInput">
+        <!--<label class="custom-file-label" for="photoInput">Datei wählen</label>
       </div>
     </div>
-    <input type="submit" name="submit" class="btn btn-outline-success" value="Hochladen">
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">-->
+        <span class="">Datenschutzerklärung:</span>
+      <!--</div>
+      <div class="custom-file">-->
+        <input type="file" class="" name="privacy" id="privacyInput">
+        <!--<label class="custom-file-label" for="privacyInput">Datei wählen</label>
+      </div>
+    </div>--><br>
+    <input type="submit" name="submit" class="mt-3 btn btn-outline-success" value="Hochladen">
   </form>
 </div>
 
