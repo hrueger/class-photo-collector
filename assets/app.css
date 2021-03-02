@@ -5,3 +5,7 @@ body {
 .icon {
     height: 20px;
 }
+
+.userimg-small {
+    height: 3rem;
+}

@@ -20,13 +20,12 @@ if (isset($_POST["submit"])) {
   }
 
   if ($error == "") {
-    $username = str_replace("@allgaeugymnasium.onmicrosoft.com", "", $_SESSION["email"]);
-    $username = str_replace(".", " ", $username);
+    $safeUsername = getMySafeUsername();
 
     $filetype_photo = strtolower(pathinfo($_FILES["photo"]["name"], PATHINFO_EXTENSION));
-    $target_photo = $target_dir . $username . " Foto." . $filetype_photo;
+    $target_photo = $target_dir . $safeUsername . " Foto." . $filetype_photo;
     $filetype_privacy = strtolower(pathinfo($_FILES["photo"]["name"], PATHINFO_EXTENSION));
-    $target_privacy = $target_dir . $username . " Datenschutzerklaerung." . $filetype_privacy;
+    $target_privacy = $target_dir . $safeUsername . " Datenschutzerklaerung." . $filetype_privacy;
 
     if ($_FILES["photo"]["size"] > 1024**3) {
       $error .= "Dein Bild darf maximal 1 MB groß sein.";
@@ -34,11 +33,11 @@ if (isset($_POST["submit"])) {
     if ($_FILES["privacy"]["size"] > 1024**3) {
       $error .= "Deine Datenschutzerklärung darf maximal 1 MB groß sein.";
     }
-    if (!in_array($filetype_photo, array("png", "jpg", "jpeg", "gif", "pdf"))) {
-      $error .= "Für dein Bild sind nur PNG, JPG, JPEG, GIF und PDF Dateien erlaubt.";
+    if (!in_array($filetype_photo, array("png", "jpg", "jpeg", "gif"))) {
+      $error .= "Für dein Bild sind nur PNG, JPG, JPEG und GIF Dateien erlaubt.";
     }
-    if (!in_array($filetype_privacy, array("png", "jpg", "jpeg", "gif", "pdf"))) {
-      $error .= "Für dein Bild sind nur PNG, JPG, JPEG, GIF und PDF Dateien erlaubt.";
+    if (!in_array($filetype_privacy, array("png", "jpg", "jpeg", "gif"))) {
+      $error .= "Für dein Bild sind nur PNG, JPG, JPEG und GIF Dateien erlaubt.";
     }
   }
 

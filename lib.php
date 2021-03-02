@@ -11,6 +11,13 @@ $PHOTO_STATES["ACCEPTED"] = 2;
 $PHOTO_STATES["PHOTO_REJECTED"] = 3;
 $PHOTO_STATES["PRIVACY_REJECTED"] = 4;
 
+$PHOTO_STATES_PRETTY = [];
+$PHOTO_STATES_PRETTY[$PHOTO_STATES["MISSING"]] = "Fehlt";
+$PHOTO_STATES_PRETTY[$PHOTO_STATES["UPLOADED"]] = "Hochgeladen";
+$PHOTO_STATES_PRETTY[$PHOTO_STATES["ACCEPTED"]] = "Akzeptiert";
+$PHOTO_STATES_PRETTY[$PHOTO_STATES["PHOTO_REJECTED"]] = "Foto abgewiesen";
+$PHOTO_STATES_PRETTY[$PHOTO_STATES["PRIVACY_REJECTED"]] = "Datenschutzerklärung abgewiesen";
+
 
 error_reporting(-1);
 ini_set("display_errors", "On");
@@ -44,6 +51,23 @@ function ensureCanUpload() {
 
 function ensureStudent() {
     if ($_SESSION["job"] !== "Schueler") { redirect("index.php"); }
+}
+
+function getMySafeUsername() {
+    $safeUsername = str_replace("@allgaeugymnasium.onmicrosoft.com", "", $_SESSION["email"]);
+    return str_replace(".", " ", $safeUsername);
+}
+
+function getSafeUsername($email) {
+    $safeUsername = str_replace("@allgaeugymnasium.onmicrosoft.com", "", $email);
+    return str_replace(".", " ", $safeUsername);
+}
+
+function serveFile($filepath) {
+    $mime_type = mime_content_type($filepath);
+    header('Content-type: '.$mime_type);
+    readfile($filepath);
+    exit();
 }
 
 function request($url) {
