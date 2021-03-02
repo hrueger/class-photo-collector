@@ -38,7 +38,7 @@
         </div>
       <?php } ?>
     <?php } else if ($_SESSION["job"] == "Lehrer") { ?>
-
+      Klicke im Menü oben auf <i>Klassen</i>, um die Fotos anzusehen.
     <?php } else { ?>
       Nur LehrerInnen und SchülerInnen können dieses Tool benutzen!
     <?php } ?>
