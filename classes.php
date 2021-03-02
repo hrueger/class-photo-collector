@@ -16,18 +16,18 @@ $classes = getClasses();
     if (isset($_POST["id"])) {
       if (isset($_POST["accept"])) {
         $statement = $db->prepare("UPDATE users SET photo_state = ? WHERE id = ?");
-        $statement->execute(array($PHOTO_STATES["ACCEPTED"], $_SESSION["id"]));
+        $statement->execute(array($PHOTO_STATES["ACCEPTED"], $_POST["id"]));
 
       } else if (isset($_POST["rejectPhoto"])) {
         $statement = $db->prepare("UPDATE users SET photo_state = ? WHERE id = ?");
-        $statement->execute(array($PHOTO_STATES["PHOTO_REJECTED"], $_SESSION["id"]));
+        $statement->execute(array($PHOTO_STATES["PHOTO_REJECTED"], $_POST["id"]));
 
       } else if (isset($_POST["rejectPrivacy"])) {
         $statement = $db->prepare("UPDATE users SET photo_state = ? WHERE id = ?");
-        $statement->execute(array($PHOTO_STATES["PRIVACY_REJECTED"], $_SESSION["id"]));
+        $statement->execute(array($PHOTO_STATES["PRIVACY_REJECTED"], $_POST["id"]));
       } else if (isset($_POST["waiting"])) {
         $statement = $db->prepare("UPDATE users SET photo_state = ? WHERE id = ?");
-        $statement->execute(array($PHOTO_STATES["UPLOADED"], $_SESSION["id"]));
+        $statement->execute(array($PHOTO_STATES["UPLOADED"], $_POST["id"]));
       }
     }
   ?>
