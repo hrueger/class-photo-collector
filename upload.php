@@ -73,7 +73,7 @@ if (isset($_POST["submit"])) {
   <ul>
     <li>zwischen 1 MB und 10 MB groß sein,</li>
     <li>vor einem möglichst hellen, einfarbigem Hintergrund aufgenommen sein,</li>
-    <li>ungefähr so aussehen wie das Bild rechts und</li>
+    <li>ungefähr so aussehen wie das Beispielbild hier und</li>
     <li>keinen bestimmten Dateinamen tragen.</li>
   </ul>
   <p>Außerdem musst Du ein Foto der ausgefüllten Einverständniserklärung hochladen. Diese findest Du hier: <a href="assets/einverstaendniserklaerung_klassenfotoupload_2021.pdf" target="_blank">Einverständniserklärung herunterladen</a>.</p>
