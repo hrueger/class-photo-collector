@@ -2,12 +2,17 @@
 
 <div class="jumbotron">
   <h1>AG Klassenfotos 2021</h1>
-  <p class="lead mb-5">Das Sammeltool für Klassenfotos</p>
+  <p class="lead mb-5">Portraitfotos der Schüler für den Jahresbericht 2021 hochladen</p>
   <?php if (isLoggedin()) {
   ?>
     <h4>Willkommen <?php echo $_SESSION["username"] ?>!</h4>
-
+    
     <?php if ($_SESSION["job"] == "Schueler") {
+      ?>
+      <div class="card p-3 mb-3"><span>
+        Da wir dieses Jahr keine Klassenfotos für den Jahresbericht machen konnten, bitten wir Dich, <b>bis zum Mittwoch, 31.03.2021</b>, ein Portraitfoto von Dir hochzuladen.
+        </span></div>
+      <?php
       if (getMyPhotoState() == $PHOTO_STATES["MISSING"]) { ?>
         <div class="alert alert-primary">
           <b>Status: Nicht hochgeladen</b><br>
@@ -38,7 +43,7 @@
         </div>
       <?php } ?>
     <?php } else if ($_SESSION["job"] == "Lehrer") { ?>
-      Klicke im Menü oben auf <i>Klassen</i>, um die Fotos anzusehen.
+      Klicken Sie im Menü oben auf <i>Klassen</i>, um die Fotos Ihrer Klasse anzusehen.
     <?php } else { ?>
       Nur LehrerInnen und SchülerInnen können dieses Tool benutzen!
     <?php } ?>
