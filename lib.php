@@ -28,8 +28,16 @@ function redirect($u) {
     exit();
 }
 
+function endsWith( $haystack, $needle ) {
+   $length = strlen( $needle );
+   if( !$length ) {
+       return true;
+   }
+   return substr( $haystack, -$length ) === $needle;
+}
+
 function onPageActive($url) {
-    echo str_ends_with($_SERVER['REQUEST_URI'], $url) ? ' active' : '';
+    echo endsWith($_SERVER['REQUEST_URI'], $url) ? ' active' : '';
 }
 
 function isLoggedin() {
