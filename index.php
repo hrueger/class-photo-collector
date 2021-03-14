@@ -32,8 +32,8 @@
         </div>
       <?php } else if (getMyPhotoState() == $PHOTO_STATES["PRIVACY_REJECTED"]) { ?>
         <div class="alert alert-danger">
-          <b>Status: Datenschutzerklärung abgelehnt</b><br>
-          Du hast die Datenschutzerklärung nicht korrekt ausgefüllt. Lade dein Foto und die Datenschutzerklärung erneut hoch und beachte die angegebenen Kriterien! <br>
+          <b>Status: Einverständniserklärung abgelehnt</b><br>
+          Du hast die Einverständniserklärung nicht korrekt ausgefüllt. Lade dein Portraitfoto sowie das Foto der Einverständniserklärung erneut hoch und beachte die angegebenen Kriterien! <br>
           <a href="upload.php" class="btn btn-outline-success mt-3">Foto hochladen</a>
         </div>
       <?php } ?>
@@ -43,6 +43,7 @@
       Nur LehrerInnen und SchülerInnen können dieses Tool benutzen!
     <?php } ?>
     <br>
+    <p>Bei technischen Problemen melde Dich über Teams bei Herrn Herz.</p>
     <a class="btn btn-outline-primary mt-5" href="signout.php">Abmelden</a>
   <?php } else { ?>
     <p>Bitte einloggen:</p>

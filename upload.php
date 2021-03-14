@@ -16,7 +16,7 @@ if (isset($_POST["submit"])) {
     $error .= "Du musst ein Foto hochladen! ";
   }
   if (!$_FILES["privacy"]["name"]) {
-    $error .= "Du musst ein Foto der Datenschutzerklärung hochladen!";
+    $error .= "Du musst ein Foto der Einverständniserklärung hochladen!";
   }
 
   if ($error == "") {
@@ -25,13 +25,13 @@ if (isset($_POST["submit"])) {
     $filetype_photo = strtolower(pathinfo($_FILES["photo"]["name"], PATHINFO_EXTENSION));
     $target_photo = $target_dir . $safeUsername . " Foto." . $filetype_photo;
     $filetype_privacy = strtolower(pathinfo($_FILES["photo"]["name"], PATHINFO_EXTENSION));
-    $target_privacy = $target_dir . $safeUsername . " Datenschutzerklaerung." . $filetype_privacy;
+    $target_privacy = $target_dir . $safeUsername . " Einverstaendniserklaerung." . $filetype_privacy;
 
     if ($_FILES["photo"]["size"] > 1024**3) {
       $error .= "Dein Bild darf maximal 1 MB groß sein.";
     }
     if ($_FILES["privacy"]["size"] > 1024**3) {
-      $error .= "Deine Datenschutzerklärung darf maximal 1 MB groß sein.";
+      $error .= "Deine Einverständniserklärung darf maximal 1 MB groß sein.";
     }
     if (!in_array($filetype_photo, array("png", "jpg", "jpeg", "gif"))) {
       $error .= "Für dein Bild sind nur PNG, JPG, JPEG und GIF Dateien erlaubt.";
@@ -58,19 +58,25 @@ if (isset($_POST["submit"])) {
 ?>
 
 
-
+<style>
+.preview-img {
+  max-height: 20rem; 
+  float: right;
+  border: 5px solid white;
+}
+</style>
 
 <div class="jumbotron">
   <h1>Foto hochladen</h1>
-  <p>Dein Foto muss:</p>
+  <img class="img-responsive preview-img" src="assets/portrait.jpg">
+  <p class="mt-4">Dein Portraitfoto muss:</p>
   <ul>
-    <li>So sein</li>
-    <li>So sein</li>
-    <li>So sein</li>
-    <li>So sein</li>
-    <li>So sein</li>
+    <li>zwischen 1 MB und 10 MB groß sein,</li>
+    <li>vor einem möglichst hellen, einfarbigem Hintergrund aufgenommen sein,</li>
+    <li>ungefähr so aussehen wie das Bild rechts und</li>
+    <li>keinen bestimmten Dateinamen tragen.</li>
   </ul>
-  <p>Außerdem musst Du ein Foto der ausgefüllten Datenschutzerklärung hochladen. Die findest Du hier: (noch kein Link).</p>
+  <p>Außerdem musst Du ein Foto der ausgefüllten Einverständniserklärung hochladen. Diese findest Du hier: <a href="assets/einverstaendniserklaerung_klassenfotoupload_2021.pdf" target="_blank">Einverständniserklärung herunterladen</a>.</p>
 
   <?php if ($error) { ?>
     <div class="alert alert-danger">
@@ -82,7 +88,7 @@ if (isset($_POST["submit"])) {
   <form method="POST" enctype="multipart/form-data">
     <!--<div class="input-group mb-3">
       <div class="input-group-prepend">-->
-        <span class="">Portait:</span>
+        <span class="">Portrait:&nbsp;&nbsp;&nbsp;</span>
       <!--</div>
       <div class="custom-file">-->
         <input type="file" class="" name="photo" id="photoInput">
@@ -91,7 +97,8 @@ if (isset($_POST["submit"])) {
     </div>
     <div class="input-group mb-3">
       <div class="input-group-prepend">-->
-        <span class="">Datenschutzerklärung:</span>
+        <br>
+        <span class="">Einverständniserklärung:&nbsp;&nbsp;&nbsp;</span>
       <!--</div>
       <div class="custom-file">-->
         <input type="file" class="" name="privacy" id="privacyInput">
