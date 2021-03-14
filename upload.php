@@ -27,11 +27,11 @@ if (isset($_POST["submit"])) {
     $filetype_privacy = strtolower(pathinfo($_FILES["photo"]["name"], PATHINFO_EXTENSION));
     $target_privacy = $target_dir . $safeUsername . " Einverstaendniserklaerung." . $filetype_privacy;
 
-    if ($_FILES["photo"]["size"] > 1024**3) {
-      $error .= "Dein Bild darf maximal 1 MB groß sein.";
+    if ($_FILES["photo"]["size"] > 10*(1024**3) || $_FILES["photo"]["size"] < 1024**3) {
+      $error .= "Dein Bild muss zwischen 1 MB und 10 MB groß sein.";
     }
-    if ($_FILES["privacy"]["size"] > 1024**3) {
-      $error .= "Deine Einverständniserklärung darf maximal 1 MB groß sein.";
+    if ($_FILES["privacy"]["size"] > 10*(1024**3) || $_FILES["privacy"]["size"] < 1024**3) {
+      $error .= "Deine Einverständniserklärung muss zwischen 1 MB und 10 MB groß sein.";
     }
     if (!in_array($filetype_photo, array("png", "jpg", "jpeg", "gif"))) {
       $error .= "Für dein Bild sind nur PNG, JPG, JPEG und GIF Dateien erlaubt.";
