@@ -13,10 +13,10 @@ if (isset($_POST["submit"])) {
     mkdir($target_dir, 0777, true);
   }
   if (!$_FILES["photo"]["name"]) {
-    $error .= "Du musst ein Foto hochladen! ";
+    $error .= " Du musst ein Foto hochladen! ";
   }
   if (!$_FILES["privacy"]["name"]) {
-    $error .= "Du musst ein Foto der Einverständniserklärung hochladen!";
+    $error .= " Du musst ein Foto der Einverständniserklärung hochladen!";
   }
 
   if ($error == "") {
@@ -27,17 +27,17 @@ if (isset($_POST["submit"])) {
     $filetype_privacy = strtolower(pathinfo($_FILES["photo"]["name"], PATHINFO_EXTENSION));
     $target_privacy = $target_dir . $safeUsername . " Einverstaendniserklaerung." . $filetype_privacy;
 
-    if ($_FILES["photo"]["size"] > 10*(1024**3) || $_FILES["photo"]["size"] < 1024**3) {
-      $error .= "Dein Bild muss zwischen 1 MB und 10 MB groß sein.";
+    if ($_FILES["photo"]["size"] > 10*(1024**2) || $_FILES["photo"]["size"] < 1024**2) {
+      $error .= " Dein Portraitfoto muss zwischen 1 MB und 10 MB groß sein.";
     }
-    if ($_FILES["privacy"]["size"] > 10*(1024**3) || $_FILES["privacy"]["size"] < 1024**3) {
-      $error .= "Deine Einverständniserklärung muss zwischen 1 MB und 10 MB groß sein.";
+    if ($_FILES["privacy"]["size"] > 10*(1024**2) || $_FILES["privacy"]["size"] < 1024**2) {
+      $error .= " Deine Einverständniserklärung muss zwischen 1 MB und 10 MB groß sein.";
     }
     if (!in_array($filetype_photo, array("png", "jpg", "jpeg", "gif"))) {
-      $error .= "Für dein Bild sind nur PNG, JPG, JPEG und GIF Dateien erlaubt.";
+      $error .= " Für Dein Portraitfoto sind nur PNG, JPG, JPEG und GIF Dateien erlaubt.";
     }
     if (!in_array($filetype_privacy, array("png", "jpg", "jpeg", "gif"))) {
-      $error .= "Für dein Bild sind nur PNG, JPG, JPEG und GIF Dateien erlaubt.";
+      $error .= " Für Deine Einverständniserklärung sind nur PNG, JPG, JPEG und GIF Dateien erlaubt.";
     }
   }
 
@@ -48,19 +48,24 @@ if (isset($_POST["submit"])) {
       $statement->execute(array($PHOTO_STATES["UPLOADED"], $_SESSION["id"]));
       redirect("index.php");
     } else {
-      $error = "Die Datei konnte nicht gespeichert werden.";
+      $error .= " Die Datei konnte nicht gespeichert werden.";
     }
   }
 }
 
-
+if (isset($_GET["submit"])) {
+  if (!isset($_FILES["photo"]) || !isset($_FILES["privacy"])) {
+    $error .= " Dein Portraitfoto und deine Einverständniserklärung müssen jeweils kleiner als 10 MB sein!";
+  }
+}
 
 ?>
 
 
 <style>
 .preview-img {
-  max-height: 20rem; 
+  max-height: 20rem;
+  max-width: 100%;
   float: right;
   border: 5px solid white;
 }
@@ -85,10 +90,10 @@ if (isset($_POST["submit"])) {
   <?php } ?>
 
 
-  <form method="POST" enctype="multipart/form-data">
+  <form method="POST" enctype="multipart/form-data" action="upload.php?submit=true">
     <!--<div class="input-group mb-3">
       <div class="input-group-prepend">-->
-        <span class="">Portrait:&nbsp;&nbsp;&nbsp;</span>
+        <span class="">Portraitfoto:&nbsp;&nbsp;&nbsp;</span>
       <!--</div>
       <div class="custom-file">-->
         <input type="file" class="" name="photo" id="photoInput">
