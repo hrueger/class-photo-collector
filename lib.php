@@ -29,11 +29,16 @@ function redirect($u) {
 }
 
 function endsWith( $haystack, $needle ) {
-   $length = strlen( $needle );
-   if( !$length ) {
+   $length = strlen($needle);
+   if(!$length) {
        return true;
    }
    return substr( $haystack, -$length ) === $needle;
+}
+
+function startsWith($string, $startString) { 
+    $len = strlen($startString);
+    return (substr($string, 0, $len) === $startString);
 }
 
 function onPageActive($url) {
@@ -104,7 +109,7 @@ function getClasses() {
     $jgst = "5";
     if (($h = fopen("grades.csv", "r")) !== FALSE) {
       while (($data = fgetcsv($h, 1000, ",")) !== FALSE)   {
-        if (!str_starts_with($data[0], $jgst) || ($jgst == 1 ? !str_starts_with($data[0], $jgst."0") : false)) {
+        if (!startsWith($data[0], $jgst) || ($jgst == 1 ? !startsWith($data[0], $jgst."0") : false)) {
           $i++;
           $jgst = $data[0][0];
         }
