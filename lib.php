@@ -109,9 +109,9 @@ function getClasses() {
     $jgst = "5";
     if (($h = fopen("grades.csv", "r")) !== FALSE) {
       while (($data = fgetcsv($h, 1000, ",")) !== FALSE)   {
-        if (!startsWith($data[0], $jgst) || ($jgst == 1 ? !startsWith($data[0], $jgst."0") : false)) {
+        if (!startsWith($data[0], $jgst)) {
           $i++;
-          $jgst = $data[0][0];
+          $jgst = $data[0][0].$data[0][1];
         }
         $classes[$i][] = $data;
       }
