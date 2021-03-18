@@ -27,10 +27,10 @@ if (isset($_POST["submit"])) {
     $filetype_privacy = strtolower(pathinfo($_FILES["photo"]["name"], PATHINFO_EXTENSION));
     $target_privacy = $target_dir . $safeUsername . " Einverstaendniserklaerung." . $filetype_privacy;
 
-    if ($_FILES["photo"]["size"] > 10*(1024**2) || $_FILES["photo"]["size"] < 1024**2) {
+    if ($_FILES["photo"]["size"] > 10 * (1024 ** 2) || $_FILES["photo"]["size"] < 1024 ** 2) {
       $error .= " Dein Portraitfoto muss zwischen 1 MB und 10 MB groß sein.";
     }
-    if ($_FILES["privacy"]["size"] > 10*(1024**2) || $_FILES["privacy"]["size"] < 1024**2) {
+    if ($_FILES["privacy"]["size"] > 10 * (1024 ** 2) || $_FILES["privacy"]["size"] < 1024 ** 2) {
       $error .= " Deine Einverständniserklärung muss zwischen 1 MB und 10 MB groß sein.";
     }
     if (!in_array($filetype_photo, array("png", "jpg", "jpeg", "gif"))) {
@@ -43,7 +43,7 @@ if (isset($_POST["submit"])) {
 
   if ($error == "") {
     if (move_uploaded_file($_FILES["photo"]["tmp_name"], $target_photo) && move_uploaded_file($_FILES["privacy"]["tmp_name"], $target_privacy)) {
-      
+
       $statement = $db->prepare("UPDATE users SET photo_state = ? WHERE id = ?");
       $statement->execute(array($PHOTO_STATES["UPLOADED"], $_SESSION["id"]));
       redirect("index.php");
@@ -63,20 +63,20 @@ if (isset($_GET["submit"])) {
 
 
 <style>
-.preview-img {
-  max-height: 20rem;
-  max-width: 100%;
-  float: right;
-  border: 5px solid white;
-}
+  .preview-img {
+    max-height: 20rem;
+    max-width: 100%;
+    float: right;
+    border: 5px solid white;
+  }
 </style>
 
 <div class="jumbotron">
-  <h1>Foto hochladen</h1>
+  <h1>Portraitfoto und Einverständniserklärung hochladen</h1>
   <img class="img-responsive preview-img" src="assets/portrait.jpg">
   <p class="mt-4">Dein Portraitfoto muss:</p>
   <ul>
-    <li>zwischen 1 MB und 10 MB groß sein,</li>
+    <li>zwischen 1 MB und 10 MB groß sein (das erfüllt in der Regel jedes Handyfoto),</li>
     <li>vor einem möglichst hellen, einfarbigem Hintergrund aufgenommen sein,</li>
     <li>ungefähr so aussehen wie das Beispielbild hier und</li>
     <li>keinen bestimmten Dateinamen tragen.</li>
@@ -91,25 +91,23 @@ if (isset($_GET["submit"])) {
 
 
   <form method="POST" enctype="multipart/form-data" action="upload.php?submit=true">
-    <!--<div class="input-group mb-3">
-      <div class="input-group-prepend">-->
-        <span class="">Portraitfoto:&nbsp;&nbsp;&nbsp;</span>
-      <!--</div>
-      <div class="custom-file">-->
+    <div class="row">
+      <div class="col-md">
+        <b>Portraitfoto:</b>
+      </div>
+      <div class="col-md-7">
         <input type="file" class="" name="photo" id="photoInput">
-        <!--<label class="custom-file-label" for="photoInput">Datei wählen</label>
       </div>
     </div>
-    <div class="input-group mb-3">
-      <div class="input-group-prepend">-->
-        <br>
-        <span class="">Einverständniserklärung:&nbsp;&nbsp;&nbsp;</span>
-      <!--</div>
-      <div class="custom-file">-->
-        <input type="file" class="" name="privacy" id="privacyInput">
-        <!--<label class="custom-file-label" for="privacyInput">Datei wählen</label>
+    <div class="row">
+      <div class="col-md">
+        <b>Einverständniserklärung:</b>
       </div>
-    </div>--><br>
+      <div class="col-md-7">
+        <input type="file" class="" name="privacy" id="privacyInput">
+      </div>
+    </div>
+    <p class="mt-3"><b>Bitte beide Bilddateien, das Portraitfoto <u>und</u> die Einverständniserklärung, <u>gleichzeitig</u> hochladen.</b><br></p>
     <input type="submit" name="submit" class="mt-3 btn btn-outline-success" value="Hochladen">
   </form>
 </div>
