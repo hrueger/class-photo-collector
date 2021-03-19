@@ -16,3 +16,12 @@ $_ENV["OAUTH_AUTHORIZE_ENDPOINT"] = "/oauth2/v2.0/authorize";
 $_ENV["OAUTH_TOKEN_ENDPOINT"] = "/oauth2/v2.0/token";
 ?>
 ```
+
+Create a `grades.csv` file and insert the available classes / grades like so:
+```csv
+05a,0,teacherA,teacherB
+05b,0,teacherC,teacherD
+05b,0,teacherE,teacherF
+```
+
+`teacherX` is the part of the mail address of that teacher before the `@`.
