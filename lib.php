@@ -10,13 +10,15 @@ $PHOTO_STATES["UPLOADED"] = 1;
 $PHOTO_STATES["ACCEPTED"] = 2;
 $PHOTO_STATES["PHOTO_REJECTED"] = 3;
 $PHOTO_STATES["PRIVACY_REJECTED"] = 4;
+$PHOTO_STATES["BOTH_REJECTED"] = 5;
 
 $PHOTO_STATES_PRETTY = [];
 $PHOTO_STATES_PRETTY[$PHOTO_STATES["MISSING"]] = "Fehlt";
 $PHOTO_STATES_PRETTY[$PHOTO_STATES["UPLOADED"]] = "Warten auf Überprüfung";
 $PHOTO_STATES_PRETTY[$PHOTO_STATES["ACCEPTED"]] = "Akzeptiert";
-$PHOTO_STATES_PRETTY[$PHOTO_STATES["PHOTO_REJECTED"]] = "Foto abgewiesen";
-$PHOTO_STATES_PRETTY[$PHOTO_STATES["PRIVACY_REJECTED"]] = "Einverständniserklärung abgewiesen";
+$PHOTO_STATES_PRETTY[$PHOTO_STATES["PHOTO_REJECTED"]] = "Portraitfoto abgelehnt";
+$PHOTO_STATES_PRETTY[$PHOTO_STATES["PRIVACY_REJECTED"]] = "Einverständniserklärung abgelehnt";
+$PHOTO_STATES_PRETTY[$PHOTO_STATES["BOTH_REJECTED"]] = "Portraitfoto und Einverständniserklärung abgelehnt";
 
 
 error_reporting(-1);
@@ -59,7 +61,7 @@ function ensureTeacher() {
 
 function ensureCanUpload() {
     global $PHOTO_STATES;
-    if (!in_array(getMyPhotoState(), array($PHOTO_STATES["MISSING"], $PHOTO_STATES["PHOTO_REJECTED"], $PHOTO_STATES["PRIVACY_REJECTED"]))) { redirect("index.php"); }
+    if (!in_array(getMyPhotoState(), array($PHOTO_STATES["MISSING"], $PHOTO_STATES["PHOTO_REJECTED"], $PHOTO_STATES["PRIVACY_REJECTED"], $PHOTO_STATES["BOTH_REJECTED"]))) { redirect("index.php"); }
 }
 
 function ensureStudent() {

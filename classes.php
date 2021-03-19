@@ -29,6 +29,9 @@ $classes = getClasses();
       } else if (isset($_POST["rejectPrivacy"])) {
         $statement = $db->prepare("UPDATE users SET photo_state = ? WHERE id = ?");
         $statement->execute(array($PHOTO_STATES["PRIVACY_REJECTED"], $_POST["id"]));
+      } else if (isset($_POST["rejectBoth"])) {
+        $statement = $db->prepare("UPDATE users SET photo_state = ? WHERE id = ?");
+        $statement->execute(array($PHOTO_STATES["BOTH_REJECTED"], $_POST["id"]));
       } else if (isset($_POST["waiting"])) {
         $statement = $db->prepare("UPDATE users SET photo_state = ? WHERE id = ?");
         $statement->execute(array($PHOTO_STATES["UPLOADED"], $_POST["id"]));
@@ -46,11 +49,12 @@ $classes = getClasses();
         <li>Sind Portraitfoto und Einverständniserklärung <b>in Ordnung</b>, klicken Sie auf <i class="fake-button fas fa-check text-success d-inline-block border border-success p-1"></i>.</li>
         <li>Ist das <b>Portrait nicht in Ordnung</b> (falsche Person, Gesicht nicht / schlecht erkennbar, ...), klicken Sie auf <i class="fake-button fas fa-user-times text-danger d-inline-block border border-danger p-1"></i>.</li>
         <li>Ist die <b>Einverständniserklärung nicht in Ordnung</b> (Unterschriften fehlen, sind nicht glaubhaft, ...), klicken Sie auf <i class="fake-button fas fa-file-alt text-danger d-inline-block border border-danger p-1"></i>.</li>
+        <li>Ist <b>weder das Portraitfoto noch die Einverständniserklärung in Ordnung</b>, klicken Sie auf <i class="fake-button fas fa-times text-danger d-inline-block border border-danger p-1"></i>.</li>
         <li>Falls Sie Ihre <b>Eingaben rückgängig</b> machen wollen, klicken Sie auf <i class="fake-button fas fa-clock text-primary d-inline-block border border-primary p-1"></i>.</li>
       </ol>
       <div class="alert alert-warning">
         <b>Wichtig!</b>:<br>
-        Bitte nehmen Sie im Fall von 4. oder 5. mit dem Schüler über Teams Kontakt auf und erläutern Sie ihm seinen Fehler.<br>
+        Bitte nehmen Sie im Fall von 4., 5. oder 6. mit dem Schüler über Teams Kontakt auf und erläutern Sie ihm seinen Fehler.<br>
         Bei wirklich unklaren Fällen, schreiben Sie bitte Herrn Herz unter Nennung der Klasse und des Schülernamens über Teams an.
       </div>
       Vielen Dank für Ihre Mitarbeit bei der Erstellung des Jahresberichts!
@@ -93,6 +97,7 @@ $classes = getClasses();
               <td><?php if ($user["photo_state"] != $PHOTO_STATES["MISSING"]) { ?><img class="d-block img-fluid userimg-small cursor-pointer" onclick="openModal('<?php echo $user['id']; ?>', '<?php echo $user['username']; ?>', 'photo')" src="serveImage.php?type=photo&userId=<?php echo $user["id"]; ?>"><?php } ?></td>
               <td><?php if ($user["photo_state"] != $PHOTO_STATES["MISSING"]) { ?><img class="d-block img-fluid userimg-small cursor-pointer" onclick="openModal('<?php echo $user['id']; ?>', '<?php echo $user['username']; ?>', 'privacy')" src="serveImage.php?type=privacy&userId=<?php echo $user["id"]; ?>"><?php } ?></td>
               <td>
+              <?php if ($user["photo_state"] != $PHOTO_STATES["MISSING"]) { ?>
                 <form method="POST" class="d-inline">
                   <input type="hidden" name="id" value="<?php echo $user["id"]; ?>">
                   <input type="hidden" name="accept" value="true">
@@ -113,9 +118,16 @@ $classes = getClasses();
 
                 <form method="POST" class="d-inline">
                   <input type="hidden" name="id" value="<?php echo $user["id"]; ?>">
+                  <input type="hidden" name="rejectBoth" value="true">
+                  <button type="submit" class="btn btn-outline-danger" title="Portraitfoto und Einverständniserklärung nicht in Ordnung"><i class="fas fa-times"></i></button>
+                </form>
+
+                <form method="POST" class="d-inline">
+                  <input type="hidden" name="id" value="<?php echo $user["id"]; ?>">
                   <input type="hidden" name="waiting" value="true">
                   <button type="submit" class="btn btn-outline-primary" title="Status zurücksetzen"><i class="fas fa-clock"></i></button>
                 </form>
+                <?php } ?>
               </td>
             </tr>
           <?php

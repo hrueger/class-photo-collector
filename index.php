@@ -32,13 +32,30 @@
       <?php } else if (getMyPhotoState() == $PHOTO_STATES["PHOTO_REJECTED"]) { ?>
         <div class="alert alert-danger">
           <b>Status: Portraitfoto abgelehnt</b><br>
-          Dein Portraitfoto wurde leider nicht akzeptiert. Lade es erneut hoch und beachte die angegebenen Kriterien! <br>
+          Dein Portraitfoto wurde leider nicht akzeptiert. Lade es erneut hoch und beachte die angegebenen Kriterien!<br>
+          <ul>
+            <li>Bildgröße zwischen 1 MB und 10 MB</li>
+            <li>Möglichst heller, einfarbiger Hintergrund</li>
+            <li>Gesicht gut erkennbar, Blick gerade aus. Bitte lächeln!</li>
+          </ul>
           <a href="upload.php" class="btn btn-outline-success mt-3">Foto hochladen</a>
         </div>
       <?php } else if (getMyPhotoState() == $PHOTO_STATES["PRIVACY_REJECTED"]) { ?>
         <div class="alert alert-danger">
           <b>Status: Einverständniserklärung abgelehnt</b><br>
-          Du hast die Einverständniserklärung nicht korrekt ausgefüllt. Lade dein Portraitfoto sowie das Foto der Einverständniserklärung erneut hoch und beachte die angegebenen Kriterien! <br>
+          Du hast die Einverständniserklärung nicht korrekt ausgefüllt. Lade das Foto der Einverständniserklärung vollständig ausgefüllt und unterschrieben sowie dein Portraitfoto erneut hoch! <br>
+          <a href="upload.php" class="btn btn-outline-success mt-3">Foto hochladen</a>
+        </div>
+      <?php } else if (getMyPhotoState() == $PHOTO_STATES["BOTH_REJECTED"]) { ?>
+        <div class="alert alert-danger">
+          <b>Status: Portraitfoto und Einverständniserklärung abgelehnt</b><br>
+          Dein Portraitfoto wurde leider nicht akzeptiert. Lade es erneut hoch und beachte die angegebenen Kriterien!<br>
+          <ul>
+            <li>Bildgröße zwischen 1 MB und 10 MB</li>
+            <li>Möglichst heller, einfarbiger Hintergrund</li>
+            <li>Gesicht gut erkennbar, Blick gerade aus. Bitte lächeln!</li>
+          </ul>
+          Außerdem hast du die Einverständniserklärung nicht korrekt ausgefüllt. Lade das Foto der Einverständniserklärung vollständig ausgefüllt und unterschrieben sowie dein Portraitfoto erneut hoch! <br>
           <a href="upload.php" class="btn btn-outline-success mt-3">Foto hochladen</a>
         </div>
       <?php } ?>
