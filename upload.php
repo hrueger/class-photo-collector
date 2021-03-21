@@ -27,11 +27,11 @@ if (isset($_POST["submit"])) {
     $filetype_privacy = strtolower(pathinfo($_FILES["photo"]["name"], PATHINFO_EXTENSION));
     $target_privacy = $target_dir . $safeUsername . " Einverstaendniserklaerung." . $filetype_privacy;
 
-    if ($_FILES["photo"]["size"] > 10 * (1024 ** 2) || $_FILES["photo"]["size"] < 1024 ** 2) {
-      $error .= " Dein Portraitfoto muss zwischen 1 MB und 10 MB groß sein.";
+    if ($_FILES["photo"]["size"] > 10 * (1024 ** 2) || $_FILES["photo"]["size"] < 0.5 * (1024 ** 2)) {
+      $error .= " Dein Portraitfoto muss zwischen 0.5 MB und 10 MB groß sein.";
     }
-    if ($_FILES["privacy"]["size"] > 10 * (1024 ** 2) || $_FILES["privacy"]["size"] < 1024 ** 2) {
-      $error .= " Deine Einverständniserklärung muss zwischen 1 MB und 10 MB groß sein.";
+    if ($_FILES["privacy"]["size"] > 10 * (1024 ** 2) || $_FILES["privacy"]["size"] < 0.5 * (1024 ** 2)) {
+      $error .= " Deine Einverständniserklärung muss zwischen 0.5 MB und 10 MB groß sein.";
     }
     if (!in_array($filetype_photo, array("png", "jpg", "jpeg", "gif"))) {
       $error .= " Für Dein Portraitfoto sind nur PNG, JPG, JPEG und GIF Dateien erlaubt.";
@@ -76,7 +76,7 @@ if (isset($_GET["submit"])) {
   <img class="img-responsive preview-img" src="assets/portrait.jpg">
   <p class="mt-4">Dein Portraitfoto muss:</p>
   <ul>
-    <li>zwischen 1 MB und 10 MB groß sein (das erfüllt in der Regel jedes Handyfoto),</li>
+    <li>zwischen 0.5 MB und 10 MB groß sein (das erfüllt in der Regel jedes Handyfoto),</li>
     <li>vor einem möglichst hellen, einfarbigem Hintergrund aufgenommen sein,</li>
     <li>ungefähr so aussehen wie das Beispielbild hier und</li>
     <li>keinen bestimmten Dateinamen tragen.</li>

@@ -34,7 +34,7 @@
           <b>Status: Portraitfoto abgelehnt</b><br>
           Dein Portraitfoto wurde leider nicht akzeptiert. Lade es erneut hoch und beachte die angegebenen Kriterien!<br>
           <ul>
-            <li>Bildgröße zwischen 1 MB und 10 MB</li>
+            <li>Bildgröße zwischen 0.5 MB und 10 MB</li>
             <li>Möglichst heller, einfarbiger Hintergrund</li>
             <li>Gesicht gut erkennbar, Blick gerade aus. Bitte lächeln!</li>
           </ul>
@@ -51,7 +51,7 @@
           <b>Status: Portraitfoto und Einverständniserklärung abgelehnt</b><br>
           Dein Portraitfoto wurde leider nicht akzeptiert. Lade es erneut hoch und beachte die angegebenen Kriterien!<br>
           <ul>
-            <li>Bildgröße zwischen 1 MB und 10 MB</li>
+            <li>Bildgröße zwischen 0.5 MB und 10 MB</li>
             <li>Möglichst heller, einfarbiger Hintergrund</li>
             <li>Gesicht gut erkennbar, Blick gerade aus. Bitte lächeln!</li>
           </ul>
