@@ -74,12 +74,15 @@ if (isset($_GET["submit"])) {
 <div class="jumbotron">
   <h1>Portraitfoto und Einverständniserklärung hochladen</h1>
   <img class="img-responsive preview-img" src="assets/portrait.jpg">
-  <p class="mt-4">Dein Portraitfoto muss:</p>
+  <p class="mt-4">Bitte beachte:</p>
   <ul>
-    <li>zwischen 0.5 MB und 10 MB groß sein (das erfüllt in der Regel jedes Handyfoto),</li>
-    <li>vor einem möglichst hellen, einfarbigem Hintergrund aufgenommen sein,</li>
-    <li>ungefähr so aussehen wie das Beispielbild hier und</li>
-    <li>keinen bestimmten Dateinamen tragen.</li>
+    <li>Dein Portraifoto muss <b>zwischen 0.5 MB und 10 MB groß</b> sein. Je größer desto besser. (Das erfüllt in der Regel jedes Handyfoto.)</li>
+    <li>Bitte trage ein <b>einfarbiges T-Shirt oder Hemd ohne Aufschrift</b>. Die Farbe ist beliebig.</li>
+    <li>Dein <b>Gesicht</b> muss <b>gut erkennbar</b> sein. <b>Kopf in der Mitte, Blick gerade aus. Schultern sichtbar. Bitte lächeln</b>!</li>
+    <li>Bitte überprüfe auch die <b>Schärfe deines Bildes</b>.</li>
+    <li>Bitte <b>einfarbiger, möglichst weißer Hintergrund</b>. (Die Person wird digital ausgeschnitten und das funktioniert am besten mit einem einfarbigen, hellen Hintergrund.)</li>
+    <li>Bitte <b>halte etwas Abstand vom Hintergrund</b>, damit dein eigener Schatten nicht stört (vor allem beim Blitzen).</li>
+    <li>Bitte <b>fotografiere die Einverständnsierklärung</b>. Hier gibt es keine einschränkenden Bedingungen, aber die Datei muss eine <b>Bilddatei</b> sein, z.B. im jpg-Format (und kein pdf-Dokument)! </li>
   </ul>
   <p>Außerdem musst Du ein Foto der ausgefüllten Einverständniserklärung hochladen. Diese findest Du hier: <a href="assets/einverstaendniserklaerung_klassenfotoupload_2021.pdf" target="_blank">Einverständniserklärung herunterladen</a>.</p>
 
