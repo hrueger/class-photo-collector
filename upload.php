@@ -30,9 +30,9 @@ if (isset($_POST["submit"])) {
     if ($_FILES["photo"]["size"] > 10 * (1024 ** 2) || $_FILES["photo"]["size"] < 500000) {
       $error .= " Dein Portraitfoto muss zwischen 0.5 MB und 10 MB groß sein.";
     }
-    if ($_FILES["privacy"]["size"] > 10 * (1024 ** 2) || $_FILES["privacy"]["size"] < 0.5 * (1024 ** 2)) {
+    /* if ($_FILES["privacy"]["size"] > 10 * (1024 ** 2) || $_FILES["privacy"]["size"] < 0.5 * (1024 ** 2)) {
       $error .= " Deine Einverständniserklärung muss zwischen 0.5 MB und 10 MB groß sein.";
-    }
+    } */
     if (!in_array($filetype_photo, array("png", "jpg", "jpeg", "gif"))) {
       $error .= " Für Dein Portraitfoto sind nur PNG, JPG, JPEG und GIF Dateien erlaubt.";
     }
