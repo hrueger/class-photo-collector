@@ -111,8 +111,19 @@ if (isset($_GET["submit"])) {
       </div>
     </div>
     <p class="mt-3"><b>Bitte beide Bilddateien, das Portraitfoto <u>und</u> die Einverständniserklärung, <u>gleichzeitig</u> hochladen.</b><br></p>
-    <input type="submit" name="submit" class="mt-3 btn btn-outline-success" value="Hochladen">
+    <input type="submit" name="submit" class="mt-3 btn btn-outline-success" onclick="showInfo()" value="Hochladen">
+    <div class="d-block">
+      <span id="info" class="text-primary d-none"><i class="fas fa-spinner fa-spin"></i> Die Dateien werden hochgeladen. Diese Seite nicht schließen!</span>
+    </div>
   </form>
 </div>
+
+<script>
+  function showInfo() {
+      event.target.value = 'Bitte warten ...';
+      document.querySelector("#info").classList.remove("d-none");
+      return true;
+  }
+</script>
 
 <?php require_once("partials/foot.php"); ?>
