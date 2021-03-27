@@ -118,7 +118,7 @@ function getPhotoStateHTML($state)
         <tbody>
           <?php
 
-          $statement = $db->prepare("SELECT * FROM users WHERE class=? ORDER BY email DESC");
+          $statement = $db->prepare("SELECT * FROM users WHERE class=? ORDER BY email ASC");
           $statement->execute(array($_GET["class"]));
           $users = $statement->fetchAll();
           $c = 0;
