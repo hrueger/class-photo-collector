@@ -1,10 +1,53 @@
-<?php require_once("partials/head.php"); ?>
-<?php ensureLoggedin() ?>
-<?php ensureTeacher() ?>
-
 <?php
 
+require_once("lib.php");
+ensureLoggedin();
+ensureTeacher();
+
+$rest_json = file_get_contents("php://input");
+$_POST = json_decode($rest_json, true);
+if (isset($_GET["class"])) {
+  ensureCanViewPhotosOfClass($_GET["class"]);
+
+  if (isset($_POST["userId"]) && isset($_POST["action"])) {
+    if ($_POST["action"] == "accept") {
+      $state = $PHOTO_STATES["ACCEPTED"];
+    } else if ($_POST["action"] == "rejectPhoto") {
+      $state = $PHOTO_STATES["PHOTO_REJECTED"];
+    } else if ($_POST["action"] == "rejectPrivacy") {
+      $state = $PHOTO_STATES["PRIVACY_REJECTED"];
+    } else if ($_POST["action"] == "rejectBoth") {
+      $state = $PHOTO_STATES["BOTH_REJECTED"];
+    } else if ($_POST["action"] == "waiting") {
+      $state = $PHOTO_STATES["UPLOADED"];
+    }
+    $statement = $db->prepare("UPDATE users SET photo_state = ? WHERE id = ?");
+    $statement->execute(array($state, $_POST["userId"]));
+    echo getPhotoStateHTML($state);
+    die();
+  }
+}
+?>
+
+
+
+
+<?php require_once("partials/head.php");
+
 $classes = getClasses();
+
+function getPhotoStateHTML($state)
+{
+  global $PHOTO_STATES;
+  global $PHOTO_STATES_PRETTY;
+  if ($state == $PHOTO_STATES["ACCEPTED"]) {
+    echo "<span class='text-success'>" . $PHOTO_STATES_PRETTY[$state] . "</span>";
+  } else if ($state == $PHOTO_STATES["UPLOADED"]) {
+    echo "<span class='text-primary'>" . $PHOTO_STATES_PRETTY[$state] . "</span>";
+  } else {
+    echo "<span class='text-danger'>" . $PHOTO_STATES_PRETTY[$state] . "</span>";
+  }
+}
 
 ?>
 
@@ -15,27 +58,28 @@ $classes = getClasses();
 </style>
 
 <div class="jumbotron">
-  <?php if (isset($_GET["class"])) {
+
+  <?php
+  if (isset($_GET["class"])) {
     ensureCanViewPhotosOfClass($_GET["class"]);
 
-
-    if (isset($_POST["id"])) {
-      if (isset($_POST["accept"])) {
-        $statement = $db->prepare("UPDATE users SET photo_state = ? WHERE id = ?");
-        $statement->execute(array($PHOTO_STATES["ACCEPTED"], $_POST["id"]));
-      } else if (isset($_POST["rejectPhoto"])) {
-        $statement = $db->prepare("UPDATE users SET photo_state = ? WHERE id = ?");
-        $statement->execute(array($PHOTO_STATES["PHOTO_REJECTED"], $_POST["id"]));
-      } else if (isset($_POST["rejectPrivacy"])) {
-        $statement = $db->prepare("UPDATE users SET photo_state = ? WHERE id = ?");
-        $statement->execute(array($PHOTO_STATES["PRIVACY_REJECTED"], $_POST["id"]));
-      } else if (isset($_POST["rejectBoth"])) {
-        $statement = $db->prepare("UPDATE users SET photo_state = ? WHERE id = ?");
-        $statement->execute(array($PHOTO_STATES["BOTH_REJECTED"], $_POST["id"]));
-      } else if (isset($_POST["waiting"])) {
-        $statement = $db->prepare("UPDATE users SET photo_state = ? WHERE id = ?");
-        $statement->execute(array($PHOTO_STATES["UPLOADED"], $_POST["id"]));
+    if (isset($_POST["userId"]) && isset($_POST["action"])) {
+      echo "exists";
+      if ($_POST["action"] == "accept") {
+        $state = $PHOTO_STATES["ACCEPTED"];
+      } else if ($_POST["action"] == "rejectPhoto") {
+        $state = $PHOTO_STATES["PHOTO_REJECTED"];
+      } else if ($_POST["action"] == "rejectPrivacy") {
+        $state = $PHOTO_STATES["PRIVACY_REJECTED"];
+      } else if ($_POST["action"] == "rejectBoth") {
+        $state = $PHOTO_STATES["BOTH_REJECTED"];
+      } else if ($_POST["action"] == "waiting") {
+        $state = $PHOTO_STATES["UPLOADED"];
       }
+      $statement = $db->prepare("UPDATE users SET photo_state = ? WHERE id = ?");
+      $statement->execute(array($state, $_POST["userId"]));
+      echo getPhotoStateHTML($state);
+      die();
     }
   ?>
     <h1>Klasse <?php echo htmlspecialchars($_GET["class"]); ?>:</h1>
@@ -84,52 +128,36 @@ $classes = getClasses();
             <tr>
               <td><?php echo $c; ?></td>
               <td><?php echo $user["username"]; ?></td>
-              <td>
+              <td class="state">
                 <?php
-                if ($user["photo_state"] == $PHOTO_STATES["ACCEPTED"]) {
-                  echo "<span class='text-success'>" . $PHOTO_STATES_PRETTY[$user["photo_state"]] . "</span>";
-                } else if ($user["photo_state"] == $PHOTO_STATES["UPLOADED"]) {
-                  echo "<span class='text-primary'>" . $PHOTO_STATES_PRETTY[$user["photo_state"]] . "</span>";
-                } else {
-                  echo "<span class='text-danger'>" . $PHOTO_STATES_PRETTY[$user["photo_state"]] . "</span>";
-                }
-
+                echo getPhotoStateHTML($user["photo_state"]);
                 ?>
 
               </td>
               <td><?php if ($user["photo_state"] != $PHOTO_STATES["MISSING"]) { ?><img class="d-block img-fluid userimg-small cursor-pointer" onclick="openModal('<?php echo $user['id']; ?>', '<?php echo $user['username']; ?>', 'photo')" src="serveImage.php?type=photo&userId=<?php echo $user["id"]; ?>"><?php } ?></td>
               <td><?php if ($user["photo_state"] != $PHOTO_STATES["MISSING"]) { ?><img class="d-block img-fluid userimg-small cursor-pointer" onclick="openModal('<?php echo $user['id']; ?>', '<?php echo $user['username']; ?>', 'privacy')" src="serveImage.php?type=privacy&userId=<?php echo $user["id"]; ?>"><?php } ?></td>
               <td>
-              <?php if ($user["photo_state"] != $PHOTO_STATES["MISSING"]) { ?>
-                <form method="POST" class="d-inline">
-                  <input type="hidden" name="id" value="<?php echo $user["id"]; ?>">
-                  <input type="hidden" name="accept" value="true">
-                  <button type="submit" class="btn btn-outline-success" title="Portrait und Einverständniserklärung OK"><i class="fas fa-check"></i></button>
-                </form>
+                <?php if ($user["photo_state"] != $PHOTO_STATES["MISSING"]) { ?>
 
-                <form method="POST" class="d-inline">
-                  <input type="hidden" name="id" value="<?php echo $user["id"]; ?>">
-                  <input type="hidden" name="rejectPhoto" value="true">
-                  <button type="submit" class="btn btn-outline-danger" title="Portraitfoto nicht in Ordnung"><i class="fas fa-user-times"></i></button>
-                </form>
+                  <button class="btn btn-outline-success" title="Portrait und Einverständniserklärung OK" onclick="submit('accept', '<?php echo $user["id"]; ?>');">
+                    <i class="fas fa-check"></i>
+                  </button>
 
-                <form method="POST" class="d-inline">
-                  <input type="hidden" name="id" value="<?php echo $user["id"]; ?>">
-                  <input type="hidden" name="rejectPrivacy" value="true">
-                  <button type="submit" class="btn btn-outline-danger" title="Einverständniserklärung nicht in Ordnung"><i class="fas fa-file-alt"></i></button>
-                </form>
+                  <button class="btn btn-outline-danger" title="Portraitfoto nicht in Ordnung" onclick="submit('rejectPhoto', '<?php echo $user["id"]; ?>');">
+                    <i class="fas fa-user-times"></i>
+                  </button>
 
-                <form method="POST" class="d-inline">
-                  <input type="hidden" name="id" value="<?php echo $user["id"]; ?>">
-                  <input type="hidden" name="rejectBoth" value="true">
-                  <button type="submit" class="btn btn-outline-danger" title="Portraitfoto und Einverständniserklärung nicht in Ordnung"><i class="fas fa-times"></i></button>
-                </form>
+                  <button class="btn btn-outline-danger" title="Einverständniserklärung nicht in Ordnung" onclick="submit('rejectPrivacy', '<?php echo $user["id"]; ?>');">
+                    <i class="fas fa-file-alt"></i>
+                  </button>
 
-                <form method="POST" class="d-inline">
-                  <input type="hidden" name="id" value="<?php echo $user["id"]; ?>">
-                  <input type="hidden" name="waiting" value="true">
-                  <button type="submit" class="btn btn-outline-primary" title="Status zurücksetzen"><i class="fas fa-clock"></i></button>
-                </form>
+                  <button class="btn btn-outline-danger" title="Portraitfoto und Einverständniserklärung nicht in Ordnung" onclick="submit('rejectBoth', '<?php echo $user["id"]; ?>');">
+                    <i class="fas fa-times"></i>
+                  </button>
+
+                  <button class="btn btn-outline-primary" title="Status zurücksetzen" onclick="submit('waiting', '<?php echo $user["id"]; ?>');">
+                    <i class="fas fa-clock"></i>
+                  </button>
                 <?php } ?>
               </td>
             </tr>
@@ -139,6 +167,24 @@ $classes = getClasses();
         </tbody>
       </table>
     </div>
+    <script>
+      function submit(action, userId) {
+        const stateElement = event.target.closest("tr").querySelector(".state")
+        stateElement.innerHTML = '<span class="text-primary"><i class="fas fa-spinner fa-spin"></i> Laden</span>';
+        fetch("classes.php?class=<?php echo $_GET["class"]; ?>", {
+          method: "POST",
+          body: JSON.stringify({
+            action,
+            userId,
+          }),
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        }).then(async (data) => {
+          stateElement.innerHTML = await data.text();
+        });
+      }
+    </script>
   <?php
   } else {
   ?>
@@ -155,7 +201,7 @@ $classes = getClasses();
           <?php } ?>
           <?php for ($i = 0; $i < 6 - count($jahrgangsstufe); $i++) {
           ?> <div class="col"></div> <?php
-                                      } ?>
+                                    } ?>
         </div>
       <?php } ?>
     </div>
