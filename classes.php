@@ -63,6 +63,7 @@ $classes = getClasses();
       <table class="table table-striped">
         <thead>
           <tr>
+            <th>#</th>
             <th>Name</th>
             <th>Status</th>
             <th>Portraitfoto</th>
@@ -76,10 +77,12 @@ $classes = getClasses();
           $statement = $db->prepare("SELECT * FROM users WHERE class=? ORDER BY email DESC");
           $statement->execute(array($_GET["class"]));
           $users = $statement->fetchAll();
-
+          $c = 0;
           foreach ($users as $user) {
+            $c++;
           ?>
             <tr>
+              <td><?php echo $c; ?></td>
               <td><?php echo $user["username"]; ?></td>
               <td>
                 <?php
