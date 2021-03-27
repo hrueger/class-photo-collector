@@ -73,7 +73,7 @@ $classes = getClasses();
         <tbody>
           <?php
 
-          $statement = $db->prepare("SELECT * FROM users WHERE class=?");
+          $statement = $db->prepare("SELECT * FROM users WHERE class=? ORDER BY email DESC");
           $statement->execute(array($_GET["class"]));
           $users = $statement->fetchAll();
 
