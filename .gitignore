@@ -1,4 +1,5 @@
 secret.php
 *.sqlite3
-userdata
+userdata/*
+!userdata/.htaccess
 grades.csv
