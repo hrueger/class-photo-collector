@@ -102,7 +102,18 @@ function canViewPhotosOfClass($class) {
         return true;
     }
     return in_array($u, array($class[2], $class[3]));
-    
+}
+
+function removeUserImages($target_dir, $safeUsername) {
+    foreach (array("Foto", "Einverstaendniserklaerung") as $type) {
+        foreach (array("png", "jpg", "jpeg", "gif") as $extension) {
+            $fullpath = $target_dir . $safeUsername . " " . $type . "." . $extension;
+            var_pre_dump($fullpath);
+            if (is_file($fullpath)) {
+                unlink($fullpath);
+            }
+        }
+    }
 }
 
 function getClasses() {
@@ -182,5 +193,3 @@ function random_str(
     }
     return implode('', $pieces);
 }
-
-?>

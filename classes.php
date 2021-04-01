@@ -60,6 +60,7 @@ if (isset($_GET["class"])) {
     }
 
     if ($error == "") {
+      removeUserImages($target_dir, $safeUsername);
       if (move_uploaded_file($_FILES["photo"]["tmp_name"], $target_photo) && move_uploaded_file($_FILES["privacy"]["tmp_name"], $target_privacy)) {
 
         $statement = $db->prepare("UPDATE users SET photo_state = ? WHERE id = ?");
