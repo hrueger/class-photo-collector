@@ -5,7 +5,9 @@ ensureLoggedin();
 // ensureTeacher();
 
 $rest_json = file_get_contents("php://input");
-$_POST = json_decode($rest_json, true);
+if ($rest_json !== "") {
+  $_POST = json_decode($rest_json, true);
+}
 if (isset($_GET["class"])) {
   ensureCanViewPhotosOfClass($_GET["class"]);
 
@@ -25,6 +27,47 @@ if (isset($_GET["class"])) {
     $statement->execute(array($state, $_POST["userId"]));
     echo getPhotoStateHTML($state);
     die();
+  }
+
+
+
+  $error = "";
+  if (isset($_POST["submit"]) && isset($_POST["userId"])) {
+    var_pre_dump("Stuff exists");
+    var_pre_dump($_POST);
+    var_pre_dump($_FILES);
+    $target_dir = "userdata/" . $_GET["class"] . "/";
+    if (!file_exists($target_dir)) {
+      mkdir($target_dir, 0777, true);
+    }
+    if (!$_FILES["photo"]["name"]) {
+      $error .= " Du musst ein Foto hochladen! ";
+    }
+    if (!$_FILES["privacy"]["name"]) {
+      $error .= " Du musst ein Foto der Einverständniserklärung hochladen!";
+    }
+
+    if ($error == "") {
+      $statement = $db->prepare("SELECT email FROM users WHERE id=?");
+      $statement->execute(array($_POST["userId"]));
+      $user = $statement->fetchAll()[0];
+      $safeUsername = getSafeUsername($user["email"]);
+
+      $filetype_photo = strtolower(pathinfo($_FILES["photo"]["name"], PATHINFO_EXTENSION));
+      $target_photo = $target_dir . $safeUsername . " Foto." . $filetype_photo;
+      $filetype_privacy = strtolower(pathinfo($_FILES["privacy"]["name"], PATHINFO_EXTENSION));
+      $target_privacy = $target_dir . $safeUsername . " Einverstaendniserklaerung." . $filetype_privacy;
+    }
+
+    if ($error == "") {
+      if (move_uploaded_file($_FILES["photo"]["tmp_name"], $target_photo) && move_uploaded_file($_FILES["privacy"]["tmp_name"], $target_privacy)) {
+
+        $statement = $db->prepare("UPDATE users SET photo_state = ? WHERE id = ?");
+        $statement->execute(array($PHOTO_STATES["UPLOADED"], $_POST["userId"]));
+      } else {
+        $error .= " Die Datei konnte nicht gespeichert werden.";
+      }
+    }
   }
 }
 ?>
@@ -70,7 +113,6 @@ function getPhotoStateHTML($state)
     ensureCanViewPhotosOfClass($_GET["class"]);
 
     if (isset($_POST["userId"]) && isset($_POST["action"])) {
-      echo "exists";
       if ($_POST["action"] == "accept") {
         $state = $PHOTO_STATES["ACCEPTED"];
       } else if ($_POST["action"] == "rejectPhoto") {
@@ -91,6 +133,12 @@ function getPhotoStateHTML($state)
     <h1>Klasse <?php echo htmlspecialchars($_GET["class"]); ?>:</h1>
     <a class="btn btn-outline-primary" href="classes.php"><i class="fas fa-arrow-back"></i> Zurück</a>
     <div class="card p-2 my-3">
+      <?php if ($error) { ?>
+        <div class="alert alert-danger">
+          <b>Fehler:</b><br>
+          <?php echo $error; ?>
+        </div>
+      <?php } ?>
       <b>Anleitung:</b><br>
       <p>Liebe Klassenleiterin, lieber Klassenleiter,<br>bitte führen Sie bei jeder Schülerin / jedem Schüler ihrer Klasse folgende Schritte aus:</p>
       <ol>
@@ -164,7 +212,11 @@ function getPhotoStateHTML($state)
                   <button class="btn btn-outline-primary" title="Status zurücksetzen" onclick="submit('waiting', '<?php echo $user["id"]; ?>');">
                     <i class="fas fa-clock"></i>
                   </button>
+
                 <?php } ?>
+                <button class="btn btn-outline-info" title="Foto und Einverständniserklärung für diesen Schüler hochladen" onclick="upload('<?php echo $user["id"]; ?>', '<?php echo $user["username"]; ?>')">
+                  <i class="fas fa-upload"></i>
+                </button>
               </td>
             </tr>
           <?php
@@ -206,14 +258,20 @@ function getPhotoStateHTML($state)
                 <span><?php echo $class[0]; ?></span>
                 <span><?php $classSize = intval($class[1]); ?></span>
 
-               
-                <?php 
-                
-                $percentage_ACCEPTED = count(array_filter($class[4], function($user) use ($PHOTO_STATES) { return $user["photo_state"] == $PHOTO_STATES["ACCEPTED"]; })) / $classSize * 100;
-                $percentage_UPLOADED = count(array_filter($class[4], function($user) use ($PHOTO_STATES) { return $user["photo_state"] == $PHOTO_STATES["UPLOADED"]; })) / $classSize * 100;
-                $percentage_REJECTED = count(array_filter($class[4], function($user) use ($PHOTO_STATES) { return $user["photo_state"] == $PHOTO_STATES["PRIVACY_REJECTED"] || $user["photo_state"] == $PHOTO_STATES["PHOTO_REJECTED"] || $user["photo_state"] == $PHOTO_STATES["BOTH_REJECTED"]; })) / $classSize * 100;
+
+                <?php
+
+                $percentage_ACCEPTED = count(array_filter($class[4], function ($user) use ($PHOTO_STATES) {
+                  return $user["photo_state"] == $PHOTO_STATES["ACCEPTED"];
+                })) / $classSize * 100;
+                $percentage_UPLOADED = count(array_filter($class[4], function ($user) use ($PHOTO_STATES) {
+                  return $user["photo_state"] == $PHOTO_STATES["UPLOADED"];
+                })) / $classSize * 100;
+                $percentage_REJECTED = count(array_filter($class[4], function ($user) use ($PHOTO_STATES) {
+                  return $user["photo_state"] == $PHOTO_STATES["PRIVACY_REJECTED"] || $user["photo_state"] == $PHOTO_STATES["PHOTO_REJECTED"] || $user["photo_state"] == $PHOTO_STATES["BOTH_REJECTED"];
+                })) / $classSize * 100;
                 $percentage_MISSING = 100 - ($percentage_ACCEPTED + $percentage_REJECTED + $percentage_UPLOADED);
-                
+
                 ?>
 
                 <div class="progress border border-dark">
@@ -240,7 +298,12 @@ function getPhotoStateHTML($state)
     document.getElementById("modal-title").innerText = `${name} - ${type == "photo" ? "Portraitfoto" : "Einverständniserklärung"}`;
     document.getElementById("modal-image").src = `serveImage.php?type=${type}&userId=${id}`;
     $("#imgModal").modal()
+  }
 
+  function upload(id, name) {
+    document.getElementById("upload-modal-userId").value = id;
+    document.getElementById("upload-modal-username").innerText = name;
+    $("#uploadModal").modal()
   }
 </script>
 
@@ -263,5 +326,42 @@ function getPhotoStateHTML($state)
   </div>
 </div>
 
+<div class="modal fade" tabindex="-1" id="uploadModal">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-title">Upload für <i id="upload-modal-username"></i></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" enctype="multipart/form-data" action="classes.php?class=<?php echo htmlspecialchars($_GET["class"]); ?>">
+          <div class="row">
+            <div class="col-md">
+              <b>Portraitfoto:</b>
+            </div>
+            <div class="col-md-7">
+              <input type="file" class="" name="photo" id="photoInput">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md">
+              <b>Einverständniserklärung:</b>
+            </div>
+            <div class="col-md-7">
+              <input type="file" class="" name="privacy" id="privacyInput">
+            </div>
+          </div>
+          <input type="hidden" id="upload-modal-userId" name="userId" value="">
+          <input class="btn btn-outline-success mt-4" type="submit" name="submit" value="Hochladen">
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Schließen</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <?php require_once("partials/foot.php"); ?>
