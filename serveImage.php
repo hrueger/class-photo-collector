@@ -1,10 +1,11 @@
 <?php
 require_once("lib.php");
+require_once("class.Thumbnail.php");
 ensureLoggedin();
-ensureTeacher();
+// ensureTeacher();
 
 if (!isset($_GET["type"]) || !in_array($_GET["type"], array("photo", "privacy")) || !isset($_GET["userId"])) {
- exit();   
+ exit();
 }
 
 $statement = $db->prepare("SELECT * FROM users WHERE id=?");
@@ -16,7 +17,12 @@ if ($users && isset($users[0])) {
     foreach (array("png", "jpg", "jpeg", "gif") as $extension) {
         $fullpath = $path . $extension;
         if (is_file($fullpath)) {
-            serveFile($fullpath);
+            if (isset($_GET["thumbnail"])) {
+                $thumbnail = new Thumbnail($fullpath, 100);
+                $thumbnail->show();
+            } else {
+                serveFile($fullpath);
+            }
         }
     }
 }
