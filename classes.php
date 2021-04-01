@@ -55,6 +55,11 @@ function getPhotoStateHTML($state)
   .fake-button {
     border-radius: 3px;
   }
+  #modal-image {
+    margin-left: auto;
+    margin-right: auto;
+    max-height: 70vh;
+  }
 </style>
 
 <div class="jumbotron">
