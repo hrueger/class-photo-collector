@@ -55,6 +55,7 @@ function getPhotoStateHTML($state)
   .fake-button {
     border-radius: 3px;
   }
+
   #modal-image {
     margin-left: auto;
     margin-right: auto;
@@ -201,12 +202,32 @@ function getPhotoStateHTML($state)
         <div class="row mb-2">
           <?php foreach ($jahrgangsstufe as $class) { ?>
             <div class="col">
-              <a class="btn btn-block <?php echo (canViewPhotosOfClass($class) ? "btn-outline-primary" : "btn-outline-secondary disabled") ?>" href="classes.php?class=<?php echo $class[0]; ?>"><?php echo $class[0]; ?></a>
+              <a class="btn btn-block <?php echo (canViewPhotosOfClass($class) ? "btn-outline-dark" : "btn-outline-secondary disabled") ?>" href="classes.php?class=<?php echo $class[0]; ?>">
+                <span><?php echo $class[0]; ?></span>
+                <span><?php $classSize = intval($class[1]); ?></span>
+
+               
+                <?php 
+                
+                $percentage_ACCEPTED = count(array_filter($class[4], function($user) use ($PHOTO_STATES) { return $user["photo_state"] == $PHOTO_STATES["ACCEPTED"]; })) / $classSize * 100;
+                $percentage_UPLOADED = count(array_filter($class[4], function($user) use ($PHOTO_STATES) { return $user["photo_state"] == $PHOTO_STATES["UPLOADED"]; })) / $classSize * 100;
+                $percentage_REJECTED = count(array_filter($class[4], function($user) use ($PHOTO_STATES) { return $user["photo_state"] == $PHOTO_STATES["PRIVACY_REJECTED"] || $user["photo_state"] == $PHOTO_STATES["PHOTO_REJECTED"] || $user["photo_state"] == $PHOTO_STATES["BOTH_REJECTED"]; })) / $classSize * 100;
+                $percentage_MISSING = 100 - ($percentage_ACCEPTED + $percentage_REJECTED + $percentage_UPLOADED);
+                
+                ?>
+
+                <div class="progress border border-dark">
+                  <div class="progress-bar bg-success" style="width: <?php echo $percentage_ACCEPTED; ?>%"></div>
+                  <div class="progress-bar bg-danger" style="width: <?php echo $percentage_REJECTED; ?>%"></div>
+                  <div class="progress-bar bg-primary" style="width: <?php echo $percentage_UPLOADED; ?>%"></div>
+                  <div class="progress-bar bg-light" style="width: <?php echo $percentage_MISSING; ?>%"></div>
+                </div>
+              </a>
             </div>
           <?php } ?>
-          <?php for ($i = 0; $i < 6 - count($jahrgangsstufe); $i++) {
-          ?> <div class="col"></div> <?php
-                                    } ?>
+          <?php for ($i = 0; $i < 6 - count($jahrgangsstufe); $i++) { ?>
+            <div class="col"></div>
+          <?php } ?>
         </div>
       <?php } ?>
     </div>

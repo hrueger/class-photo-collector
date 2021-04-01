@@ -106,6 +106,11 @@ function canViewPhotosOfClass($class) {
 }
 
 function getClasses() {
+    global $db;
+    $statement = $db->prepare("SELECT * FROM users");
+    $statement->execute();
+    $users = $statement->fetchAll();
+
     $classes = array();    
     $i = 0;
     $jgst = "5";
@@ -115,7 +120,9 @@ function getClasses() {
           $i++;
           $jgst = $data[0][0].$data[0][1];
         }
-        $classes[$i][] = $data;
+        $classes[$i][] = [...$data, array_filter($users, function($user) use ($data) {
+            return $user["class"] == $data[0];
+        })];
       }
       fclose($h);
     }
