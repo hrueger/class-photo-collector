@@ -2,7 +2,7 @@
 
 require_once("lib.php");
 ensureLoggedin();
-// ensureTeacher();
+ensureTeacher();
 
 $rest_json = file_get_contents("php://input");
 if ($rest_json !== "") {

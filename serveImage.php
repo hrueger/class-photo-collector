@@ -2,7 +2,7 @@
 require_once("lib.php");
 require_once("class.Thumbnail.php");
 ensureLoggedin();
-// ensureTeacher();
+ensureTeacher();
 
 if (!isset($_GET["type"]) || !in_array($_GET["type"], array("photo", "privacy")) || !isset($_GET["userId"])) {
  exit();
