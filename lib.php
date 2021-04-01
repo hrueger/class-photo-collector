@@ -131,9 +131,9 @@ function getClasses() {
           $i++;
           $jgst = $data[0][0].$data[0][1];
         }
-        $classes[$i][] = [...$data, array_filter($users, function($user) use ($data) {
+        $classes[$i][] = array_merge($data, array(array_filter($users, function($user) use ($data) {
             return $user["class"] == $data[0];
-        })];
+        })));
       }
       fclose($h);
     }
