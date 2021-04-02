@@ -33,9 +33,6 @@ if (isset($_GET["class"])) {
 
   $error = "";
   if (isset($_POST["submit"]) && isset($_POST["userId"])) {
-    var_pre_dump("Stuff exists");
-    var_pre_dump($_POST);
-    var_pre_dump($_FILES);
     $target_dir = "userdata/" . $_GET["class"] . "/";
     if (!file_exists($target_dir)) {
       mkdir($target_dir, 0777, true);

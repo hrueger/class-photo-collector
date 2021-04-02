@@ -108,7 +108,6 @@ function removeUserImages($target_dir, $safeUsername) {
     foreach (array("Foto", "Einverstaendniserklaerung") as $type) {
         foreach (array("png", "jpg", "jpeg", "gif") as $extension) {
             $fullpath = $target_dir . $safeUsername . " " . $type . "." . $extension;
-            var_pre_dump($fullpath);
             if (is_file($fullpath)) {
                 unlink($fullpath);
             }
