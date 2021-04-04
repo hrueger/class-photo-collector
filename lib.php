@@ -56,7 +56,7 @@ function ensureLoggedin() {
 }
 
 function ensureTeacher() {
-    if ($_SESSION["job"] !== "Lehrer") { redirect("index.php"); }
+    if ($_SESSION["job"] !== "Lehrer" && !isAdmin()) { redirect("index.php"); }
 }
 
 function ensureCanUpload() {
@@ -96,11 +96,16 @@ function getSafeUsername($email) {
     return str_replace(".", " ", $safeUsername);
 }
 
-function canViewPhotosOfClass($class) {
+function isAdmin() {
     $u = strtolower(str_replace("@allgaeugymnasium.onmicrosoft.com", "", $_SESSION["email"]));
-    if (in_array($u, $_ENV["ADMINS"])) {
+    return in_array($u, $_ENV["ADMINS"]);
+}
+
+function canViewPhotosOfClass($class) {
+    if (isAdmin()) {
         return true;
     }
+    $u = strtolower(str_replace("@allgaeugymnasium.onmicrosoft.com", "", $_SESSION["email"]));
     return in_array($u, array($class[2], $class[3]));
 }
 
