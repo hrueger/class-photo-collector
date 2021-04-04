@@ -109,10 +109,14 @@ function canViewPhotosOfClass($class) {
     return in_array($u, array($class[2], $class[3]));
 }
 
-function removeUserImages($target_dir, $safeUsername) {
+function removeUserImages($target_dir, $safeUsername, $isTeacher) {
     foreach (array("Foto", "Einverstaendniserklaerung") as $type) {
         foreach (array("png", "jpg", "jpeg", "gif") as $extension) {
-            $fullpath = $target_dir . $safeUsername . " " . $type . "." . $extension;
+            if ($isTeacher) {
+                $fullpath = $target_dir . $safeUsername . "." . $extension;
+            } else {
+                $fullpath = $target_dir . $safeUsername . " " . $type . "." . $extension;
+            }
             if (is_file($fullpath)) {
                 unlink($fullpath);
             }

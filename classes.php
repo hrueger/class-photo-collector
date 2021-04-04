@@ -57,12 +57,36 @@ if (isset($_GET["class"])) {
     }
 
     if ($error == "") {
-      removeUserImages($target_dir, $safeUsername);
+      removeUserImages($target_dir, $safeUsername, false);
       if (move_uploaded_file($_FILES["photo"]["tmp_name"], $target_photo) && move_uploaded_file($_FILES["privacy"]["tmp_name"], $target_privacy)) {
 
         $statement = $db->prepare("UPDATE users SET photo_state = ? WHERE id = ?");
         $statement->execute(array($PHOTO_STATES["UPLOADED"], $_POST["userId"]));
       } else {
+        $error .= " Die Datei konnte nicht gespeichert werden.";
+      }
+    }
+  }
+
+  // Teacher Upload
+  if (isset($_POST["submitTeacherImage"])) {
+    $target_dir = "userdata/" . $_GET["class"] . "/Lehrkraefte/";
+    if (!file_exists($target_dir)) {
+      mkdir($target_dir, 0777, true);
+    }
+    if (!$_FILES["photo"]["name"]) {
+      $error .= " Du musst ein Foto hochladen! ";
+    }
+    if ($error == "") {
+      $safeUsername = getMySafeUsername();
+
+      $filetype_photo = strtolower(pathinfo($_FILES["photo"]["name"], PATHINFO_EXTENSION));
+      $target_photo = $target_dir . $safeUsername . "." . $filetype_photo;
+    }
+
+    if ($error == "") {
+      removeUserImages($target_dir, $safeUsername, true);
+      if (!move_uploaded_file($_FILES["photo"]["tmp_name"], $target_photo)) {
         $error .= " Die Datei konnte nicht gespeichert werden.";
       }
     }
@@ -222,6 +246,69 @@ function getPhotoStateHTML($state)
           ?>
         </tbody>
       </table>
+      <hr>
+      <div class="container">
+        <div class="card p-2 my-3">
+          <h6><b>Fotos der Klassenleiter:</b></h6>
+          <?php
+          $imagePath = "";
+          $target_dir = "userdata/" . $_GET["class"] . "/Lehrkraefte/";
+          if (!is_dir($target_dir)) {
+            mkdir($target_dir, 0777, true);
+          }
+          $safeUsername = getMySafeUsername();
+          foreach (array("png", "jpg", "jpeg", "gif") as $extension) {
+            $fullpath = $target_dir . $safeUsername  . "." . $extension;
+            if (is_file($fullpath)) {
+              $imagePath = $fullpath;
+            }
+          }
+
+          if ($imagePath == "") { ?>
+            Bitte laden Sie hier ein Portraitfoto von Ihnen hoch:
+            <form method="POST" enctype="multipart/form-data" class="mt-4" action="classes.php?class=<?php echo htmlspecialchars($_GET["class"]); ?>">
+              <div class="row">
+                <div class="col-md">
+                  <b>Portraitfoto:</b>
+                </div>
+                <div class="col-md-7">
+                  <input type="file" class="" name="photo" id="photoInput">
+                </div>
+              </div>
+              <input class="btn btn-outline-success mt-4" type="submit" name="submitTeacherImage" value="Hochladen">
+            </form>
+            <hr>
+          <?php } ?>
+
+
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Portraitfoto</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+              if ($handle = opendir($target_dir)) {
+                while (false !== ($entry = readdir($handle))) {
+                  if ($entry != "." && $entry != "..") {
+                    $username = pathinfo($entry)["filename"];
+              ?>
+                    <tr>
+                      <td><?php echo $username; ?> </td>
+                      <td><img class="d-block img-fluid userimg-small cursor-pointer" onclick="openModal('<?php echo $_GET["class"]; ?>', '<?php echo $username; ?>', 'teacher')" src="serveImage.php?type=teacher&class=<?php echo htmlspecialchars($_GET["class"]); ?>&username=<?php echo $username; ?>&thumbnail"></td>
+                    </tr>
+              <?php }
+                }
+                closedir($handle);
+              } ?>
+            </tbody>
+          </table>
+
+
+        </div>
+      </div>
     </div>
     <script>
       function submit(action, userId) {
@@ -293,8 +380,13 @@ function getPhotoStateHTML($state)
 
 <script>
   function openModal(id, name, type) {
-    document.getElementById("modal-title").innerText = `${name} - ${type == "photo" ? "Portraitfoto" : "Einverständniserklärung"}`;
-    document.getElementById("modal-image").src = `serveImage.php?type=${type}&userId=${id}`;
+    if (type == "teacher") {
+      document.getElementById("modal-title").innerText = `${name} - Klassenleitung`;
+      document.getElementById("modal-image").src = `serveImage.php?type=teacher&username=${name}&class=${id}`;
+    } else {
+      document.getElementById("modal-title").innerText = `${name} - ${type == "photo" ? "Portraitfoto" : "Einverständniserklärung"}`;
+      document.getElementById("modal-image").src = `serveImage.php?type=${type}&userId=${id}`;
+    }
     $("#imgModal").modal()
   }
 
