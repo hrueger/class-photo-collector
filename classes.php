@@ -348,7 +348,7 @@ function getPhotoStateHTML($state)
             'Content-Type': 'application/json'
           },
         }).then(() => {
-          location.reload();
+          window.location.href = window.location.href;
         });
       }
     </script>
