@@ -29,7 +29,11 @@ if (isset($_GET["class"])) {
     die();
   }
 
-
+  if (isset($_GET["deleteTeacherPhoto"]) && isset($_POST["username"])) {
+    $target_dir = "userdata/" . $_GET["class"] . "/Lehrkraefte/";
+    removeUserImages($target_dir, $_POST["username"], true);
+    die();
+  }
 
   $error = "";
   if (isset($_POST["submit"]) && isset($_POST["userId"])) {
@@ -286,6 +290,7 @@ function getPhotoStateHTML($state)
               <tr>
                 <th>Name</th>
                 <th>Portraitfoto</th>
+                <th>Aktionen</th>
               </tr>
             </thead>
             <tbody>
@@ -298,6 +303,11 @@ function getPhotoStateHTML($state)
                     <tr>
                       <td><?php echo $username; ?> </td>
                       <td><img class="d-block img-fluid userimg-small cursor-pointer" onclick="openModal('<?php echo $_GET["class"]; ?>', '<?php echo $username; ?>', 'teacher')" src="serveImage.php?type=teacher&class=<?php echo htmlspecialchars($_GET["class"]); ?>&username=<?php echo $username; ?>&thumbnail"></td>
+                      <td>
+                        <button class="btn btn-outline-danger" title="Portraitfoto löschen" onclick="deleteTeacherPhoto('<?php echo $username; ?>');">
+                          <i class="fas fa-trash-alt"></i>
+                        </button>
+                      </td>
                     </tr>
               <?php }
                 }
@@ -325,6 +335,20 @@ function getPhotoStateHTML($state)
           },
         }).then(async (data) => {
           stateElement.innerHTML = await data.text();
+        });
+      }
+
+      function deleteTeacherPhoto(username) {
+        fetch("classes.php?deleteTeacherPhoto&class=<?php echo $_GET["class"]; ?>", {
+          method: "POST",
+          body: JSON.stringify({
+            username,
+          }),
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        }).then(() => {
+          location.reload();
         });
       }
     </script>
