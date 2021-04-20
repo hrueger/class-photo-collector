@@ -74,7 +74,7 @@ if (isset($_GET["submit"])) {
 
 <div class="jumbotron">
   <h1>Foto und Einverständniserklärung hochladen</h1>
-  <img class="img-responsive preview-img" src="assets/portrait.jpg">
+  <img class="img-responsive preview-img" src="assets/splitter_logo.jpg">
   <p class="mt-4">Bitte beachte:</p>
   <p>Du musst zusätzlich zu deinem Foto noch ein Foto der ausgefüllten Einverständniserklärung hochladen. Diese findest Du hier: <a href="assets/einverstaendniserklaerung_splitter_fotoupload_2021.pdf" target="_blank">Einverständniserklärung herunterladen</a>.</p>
 
