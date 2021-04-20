@@ -255,13 +255,13 @@ function getPhotoStateHTML($state)
 
                 <?php
 
-                $percentage_ACCEPTED = count(array_filter($class[4], function ($user) use ($PHOTO_STATES) {
+                $percentage_ACCEPTED = count(array_filter($class[2], function ($user) use ($PHOTO_STATES) {
                   return $user["photo_state"] == $PHOTO_STATES["ACCEPTED"];
                 })) / $classSize * 100;
-                $percentage_UPLOADED = count(array_filter($class[4], function ($user) use ($PHOTO_STATES) {
+                $percentage_UPLOADED = count(array_filter($class[2], function ($user) use ($PHOTO_STATES) {
                   return $user["photo_state"] == $PHOTO_STATES["UPLOADED"];
                 })) / $classSize * 100;
-                $percentage_REJECTED = count(array_filter($class[4], function ($user) use ($PHOTO_STATES) {
+                $percentage_REJECTED = count(array_filter($class[2], function ($user) use ($PHOTO_STATES) {
                   return $user["photo_state"] == $PHOTO_STATES["PRIVACY_REJECTED"] || $user["photo_state"] == $PHOTO_STATES["PHOTO_REJECTED"] || $user["photo_state"] == $PHOTO_STATES["BOTH_REJECTED"];
                 })) / $classSize * 100;
                 $percentage_MISSING = 100 - ($percentage_ACCEPTED + $percentage_REJECTED + $percentage_UPLOADED);
