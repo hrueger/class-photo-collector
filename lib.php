@@ -16,9 +16,9 @@ $PHOTO_STATES_PRETTY = [];
 $PHOTO_STATES_PRETTY[$PHOTO_STATES["MISSING"]] = "Fehlt";
 $PHOTO_STATES_PRETTY[$PHOTO_STATES["UPLOADED"]] = "Warten auf Überprüfung";
 $PHOTO_STATES_PRETTY[$PHOTO_STATES["ACCEPTED"]] = "Akzeptiert";
-$PHOTO_STATES_PRETTY[$PHOTO_STATES["PHOTO_REJECTED"]] = "Portraitfoto abgelehnt";
+$PHOTO_STATES_PRETTY[$PHOTO_STATES["PHOTO_REJECTED"]] = "Foto abgelehnt";
 $PHOTO_STATES_PRETTY[$PHOTO_STATES["PRIVACY_REJECTED"]] = "Einverständniserklärung abgelehnt";
-$PHOTO_STATES_PRETTY[$PHOTO_STATES["BOTH_REJECTED"]] = "Portraitfoto und Einverständniserklärung abgelehnt";
+$PHOTO_STATES_PRETTY[$PHOTO_STATES["BOTH_REJECTED"]] = "Foto und Einverständniserklärung abgelehnt";
 
 
 error_reporting(-1);

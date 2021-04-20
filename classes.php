@@ -29,12 +29,6 @@ if (isset($_GET["class"])) {
     die();
   }
 
-  if (isset($_GET["deleteTeacherPhoto"]) && isset($_POST["username"])) {
-    $target_dir = "userdata/" . $_GET["class"] . "/Lehrkraefte/";
-    removeUserImages($target_dir, $_POST["username"], true);
-    die();
-  }
-
   $error = "";
   if (isset($_POST["submit"]) && isset($_POST["userId"])) {
     $target_dir = "userdata/" . $_GET["class"] . "/";
@@ -67,30 +61,6 @@ if (isset($_GET["class"])) {
         $statement = $db->prepare("UPDATE users SET photo_state = ? WHERE id = ?");
         $statement->execute(array($PHOTO_STATES["UPLOADED"], $_POST["userId"]));
       } else {
-        $error .= " Die Datei konnte nicht gespeichert werden.";
-      }
-    }
-  }
-
-  // Teacher Upload
-  if (isset($_POST["submitTeacherImage"])) {
-    $target_dir = "userdata/" . $_GET["class"] . "/Lehrkraefte/";
-    if (!file_exists($target_dir)) {
-      mkdir($target_dir, 0777, true);
-    }
-    if (!$_FILES["photo"]["name"]) {
-      $error .= " Du musst ein Foto hochladen! ";
-    }
-    if ($error == "") {
-      $safeUsername = getMySafeUsername();
-
-      $filetype_photo = strtolower(pathinfo($_FILES["photo"]["name"], PATHINFO_EXTENSION));
-      $target_photo = $target_dir . $safeUsername . "." . $filetype_photo;
-    }
-
-    if ($error == "") {
-      removeUserImages($target_dir, $safeUsername, true);
-      if (!move_uploaded_file($_FILES["photo"]["tmp_name"], $target_photo)) {
         $error .= " Die Datei konnte nicht gespeichert werden.";
       }
     }
@@ -166,22 +136,20 @@ function getPhotoStateHTML($state)
         </div>
       <?php } ?>
       <b>Anleitung:</b><br>
-      <p>Liebe Klassenleiterin, lieber Klassenleiter,<br>bitte führen Sie bei jeder Schülerin / jedem Schüler ihrer Klasse folgende Schritte aus:</p>
       <ol>
-        <li>Klicken Sie auf das <b>Portraitfoto</b> und überprüfen Sie die <b>Übereinstimmung von Name und Gesicht</b>.</li>
+        <li>Klicken Sie auf das <b>Foto</b> und überprüfen Sie die <b>Brauchbarkeit</b>.</li>
         <li>Klicken Sie auf die <b>Einverständniserklärung</b> und überprüfen Sie die <b>Vollständigkeit, vor allem die Unterschriften</b>.</li>
-        <li>Sind Portraitfoto und Einverständniserklärung <b>in Ordnung</b>, klicken Sie auf <i class="fake-button fas fa-check text-success d-inline-block border border-success p-1"></i>.</li>
+        <li>Sind Foto und Einverständniserklärung <b>in Ordnung</b>, klicken Sie auf <i class="fake-button fas fa-check text-success d-inline-block border border-success p-1"></i>.</li>
         <li>Ist das <b>Portrait nicht in Ordnung</b> (falsche Person, Gesicht nicht / schlecht erkennbar, ...), klicken Sie auf <i class="fake-button fas fa-user-times text-danger d-inline-block border border-danger p-1"></i>.</li>
         <li>Ist die <b>Einverständniserklärung nicht in Ordnung</b> (Unterschriften fehlen, sind nicht glaubhaft, ...), klicken Sie auf <i class="fake-button fas fa-file-alt text-danger d-inline-block border border-danger p-1"></i>.</li>
-        <li>Ist <b>weder das Portraitfoto noch die Einverständniserklärung in Ordnung</b>, klicken Sie auf <i class="fake-button fas fa-times text-danger d-inline-block border border-danger p-1"></i>.</li>
+        <li>Ist <b>weder das Foto noch die Einverständniserklärung in Ordnung</b>, klicken Sie auf <i class="fake-button fas fa-times text-danger d-inline-block border border-danger p-1"></i>.</li>
         <li>Falls Sie Ihre <b>Eingaben rückgängig</b> machen wollen, klicken Sie auf <i class="fake-button fas fa-clock text-primary d-inline-block border border-primary p-1"></i>.</li>
       </ol>
       <div class="alert alert-warning">
         <b>Wichtig!</b>:<br>
         Bitte nehmen Sie im Fall von 4., 5. oder 6. mit dem Schüler über Teams Kontakt auf und erläutern Sie ihm seinen Fehler.<br>
-        Bei wirklich unklaren Fällen, schreiben Sie bitte Herrn Herz unter Nennung der Klasse und des Schülernamens über Teams an.
       </div>
-      Vielen Dank für Ihre Mitarbeit bei der Erstellung des Jahresberichts!
+      Vielen Dank für Ihre Mitarbeit beim Fotoupload für den Splitter!
     </div>
     <div class="table-responsive">
       <table class="table table-striped">
@@ -190,7 +158,7 @@ function getPhotoStateHTML($state)
             <th>#</th>
             <th>Name</th>
             <th>Status</th>
-            <th>Portraitfoto</th>
+            <th>Foto</th>
             <th>Einverständniserklärung</th>
             <th>Aktionen</th>
           </tr>
@@ -223,7 +191,7 @@ function getPhotoStateHTML($state)
                     <i class="fas fa-check"></i>
                   </button>
 
-                  <button class="btn btn-outline-danger" title="Portraitfoto nicht in Ordnung" onclick="submit('rejectPhoto', '<?php echo $user["id"]; ?>');">
+                  <button class="btn btn-outline-danger" title="Foto nicht in Ordnung" onclick="submit('rejectPhoto', '<?php echo $user["id"]; ?>');">
                     <i class="fas fa-user-times"></i>
                   </button>
 
@@ -231,7 +199,7 @@ function getPhotoStateHTML($state)
                     <i class="fas fa-file-alt"></i>
                   </button>
 
-                  <button class="btn btn-outline-danger" title="Portraitfoto und Einverständniserklärung nicht in Ordnung" onclick="submit('rejectBoth', '<?php echo $user["id"]; ?>');">
+                  <button class="btn btn-outline-danger" title="Foto und Einverständniserklärung nicht in Ordnung" onclick="submit('rejectBoth', '<?php echo $user["id"]; ?>');">
                     <i class="fas fa-times"></i>
                   </button>
 
@@ -251,74 +219,6 @@ function getPhotoStateHTML($state)
         </tbody>
       </table>
       <hr>
-      <div class="container">
-        <div class="card p-2 my-3">
-          <h6><b>Fotos der Klassenleiter:</b></h6>
-          <?php
-          $imagePath = "";
-          $target_dir = "userdata/" . $_GET["class"] . "/Lehrkraefte/";
-          if (!is_dir($target_dir)) {
-            mkdir($target_dir, 0777, true);
-          }
-          $safeUsername = getMySafeUsername();
-          foreach (array("png", "jpg", "jpeg", "gif") as $extension) {
-            $fullpath = $target_dir . $safeUsername  . "." . $extension;
-            if (is_file($fullpath)) {
-              $imagePath = $fullpath;
-            }
-          }
-
-          if ($imagePath == "") { ?>
-            Bitte laden Sie hier ein Portraitfoto von Ihnen hoch:
-            <form method="POST" enctype="multipart/form-data" class="mt-4" action="classes.php?class=<?php echo htmlspecialchars($_GET["class"]); ?>">
-              <div class="row">
-                <div class="col-md">
-                  <b>Portraitfoto:</b>
-                </div>
-                <div class="col-md-7">
-                  <input type="file" class="" name="photo" id="photoInput">
-                </div>
-              </div>
-              <input class="btn btn-outline-success mt-4" type="submit" name="submitTeacherImage" value="Hochladen">
-            </form>
-            <hr>
-          <?php } ?>
-
-
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Portraitfoto</th>
-                <th>Aktionen</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php
-              if ($handle = opendir($target_dir)) {
-                while (false !== ($entry = readdir($handle))) {
-                  if ($entry != "." && $entry != "..") {
-                    $username = pathinfo($entry)["filename"];
-              ?>
-                    <tr>
-                      <td><?php echo $username; ?> </td>
-                      <td><img class="d-block img-fluid userimg-small cursor-pointer" onclick="openModal('<?php echo $_GET["class"]; ?>', '<?php echo $username; ?>', 'teacher')" src="serveImage.php?type=teacher&class=<?php echo htmlspecialchars($_GET["class"]); ?>&username=<?php echo $username; ?>&thumbnail"></td>
-                      <td>
-                        <button class="btn btn-outline-danger" title="Portraitfoto löschen" onclick="deleteTeacherPhoto('<?php echo $username; ?>');">
-                          <i class="fas fa-trash-alt"></i>
-                        </button>
-                      </td>
-                    </tr>
-              <?php }
-                }
-                closedir($handle);
-              } ?>
-            </tbody>
-          </table>
-
-
-        </div>
-      </div>
     </div>
     <script>
       function submit(action, userId) {
@@ -337,27 +237,12 @@ function getPhotoStateHTML($state)
           stateElement.innerHTML = await data.text();
         });
       }
-
-      function deleteTeacherPhoto(username) {
-        fetch("classes.php?deleteTeacherPhoto&class=<?php echo $_GET["class"]; ?>", {
-          method: "POST",
-          body: JSON.stringify({
-            username,
-          }),
-          headers: {
-            'Content-Type': 'application/json'
-          },
-        }).then(() => {
-          window.location.href = window.location.href;
-        });
-      }
     </script>
   <?php
   } else {
   ?>
 
     <h1>Klassen:</h1>
-    <p>Liebe Klassenleiterin, lieber Klassenleiter,<br>klicken Sie bitte hier auf Ihre Klasse.</p>
     <div class="mt-4">
       <?php foreach ($classes as $jahrgangsstufe) { ?>
         <div class="row mb-2">
@@ -408,7 +293,7 @@ function getPhotoStateHTML($state)
       document.getElementById("modal-title").innerText = `${name} - Klassenleitung`;
       document.getElementById("modal-image").src = `serveImage.php?type=teacher&username=${name}&class=${id}`;
     } else {
-      document.getElementById("modal-title").innerText = `${name} - ${type == "photo" ? "Portraitfoto" : "Einverständniserklärung"}`;
+      document.getElementById("modal-title").innerText = `${name} - ${type == "photo" ? "Foto" : "Einverständniserklärung"}`;
       document.getElementById("modal-image").src = `serveImage.php?type=${type}&userId=${id}`;
     }
     $("#imgModal").modal()
@@ -453,7 +338,7 @@ function getPhotoStateHTML($state)
         <form method="POST" enctype="multipart/form-data" action="classes.php?class=<?php echo htmlspecialchars($_GET["class"]); ?>">
           <div class="row">
             <div class="col-md">
-              <b>Portraitfoto:</b>
+              <b>Foto:</b>
             </div>
             <div class="col-md-7">
               <input type="file" class="" name="photo" id="photoInput">

@@ -28,13 +28,13 @@ if (isset($_POST["submit"])) {
     $target_privacy = $target_dir . $safeUsername . " Einverstaendniserklaerung." . $filetype_privacy;
 
     if ($_FILES["photo"]["size"] > 10 * (1024 ** 2) || $_FILES["photo"]["size"] < 500000) {
-      $error .= " Dein Portraitfoto muss zwischen 0.5 MB und 10 MB groß sein.";
+      $error .= " Dein Foto muss zwischen 0.5 MB und 10 MB groß sein.";
     }
     /* if ($_FILES["privacy"]["size"] > 10 * (1024 ** 2) || $_FILES["privacy"]["size"] < 0.5 * (1024 ** 2)) {
       $error .= " Deine Einverständniserklärung muss zwischen 0.5 MB und 10 MB groß sein.";
     } */
     if (!in_array($filetype_photo, array("png", "jpg", "jpeg", "gif"))) {
-      $error .= " Für Dein Portraitfoto sind nur PNG, JPG, JPEG und GIF Dateien erlaubt.";
+      $error .= " Für Dein Foto sind nur PNG, JPG, JPEG und GIF Dateien erlaubt.";
     }
     if (!in_array($filetype_privacy, array("png", "jpg", "jpeg", "gif"))) {
       $error .= " Für Deine Einverständniserklärung sind nur PNG, JPG, JPEG und GIF Dateien erlaubt.";
@@ -56,7 +56,7 @@ if (isset($_POST["submit"])) {
 
 if (isset($_GET["submit"])) {
   if (!isset($_FILES["photo"]) || !isset($_FILES["privacy"])) {
-    $error .= " Dein Portraitfoto und deine Einverständniserklärung müssen jeweils kleiner als 10 MB sein!";
+    $error .= " Dein Foto und deine Einverständniserklärung müssen jeweils kleiner als 10 MB sein!";
   }
 }
 
@@ -73,19 +73,10 @@ if (isset($_GET["submit"])) {
 </style>
 
 <div class="jumbotron">
-  <h1>Portraitfoto und Einverständniserklärung hochladen</h1>
+  <h1>Foto und Einverständniserklärung hochladen</h1>
   <img class="img-responsive preview-img" src="assets/portrait.jpg">
   <p class="mt-4">Bitte beachte:</p>
-  <ul>
-    <li>Dein Portraifoto muss <b>zwischen 0.5 MB und 10 MB groß</b> sein. Je größer desto besser. (Das erfüllt in der Regel jedes Handyfoto.)</li>
-    <li>Bitte trage ein <b>einfarbiges T-Shirt oder Hemd ohne Aufschrift</b>. Die Farbe ist beliebig.</li>
-    <li>Dein <b>Gesicht</b> muss <b>gut erkennbar</b> sein. <b>Kopf in der Mitte, Blick gerade aus. Schultern sichtbar. Bitte lächeln</b>!</li>
-    <li>Bitte überprüfe auch die <b>Schärfe deines Bildes</b>.</li>
-    <li>Bitte <b>einfarbiger, möglichst weißer Hintergrund</b>. (Die Person wird digital ausgeschnitten und das funktioniert am besten mit einem einfarbigen, hellen Hintergrund.)</li>
-    <li>Bitte <b>halte etwas Abstand vom Hintergrund</b>, damit dein eigener Schatten nicht stört (vor allem beim Blitzen).</li>
-    <li>Bitte <b>fotografiere die Einverständnsierklärung</b>. Hier gibt es keine einschränkenden Bedingungen, aber die Datei muss eine <b>Bilddatei</b> sein, z.B. im jpg-Format (und kein pdf-Dokument)! </li>
-  </ul>
-  <p>Außerdem musst Du ein Foto der ausgefüllten Einverständniserklärung hochladen. Diese findest Du hier: <a href="assets/einverstaendniserklaerung_klassenfotoupload_2021.pdf" target="_blank">Einverständniserklärung herunterladen</a>.</p>
+  <p>Du musst zusätzlich zu deinem Foto noch ein Foto der ausgefüllten Einverständniserklärung hochladen. Diese findest Du hier: <a href="assets/einverstaendniserklaerung_splitter_fotoupload_2021.pdf" target="_blank">Einverständniserklärung herunterladen</a>.</p>
 
   <?php if ($error) { ?>
     <div class="alert alert-danger">
@@ -97,7 +88,7 @@ if (isset($_GET["submit"])) {
   <form method="POST" enctype="multipart/form-data" action="upload.php?submit=true">
     <div class="row">
       <div class="col-md">
-        <b>Portraitfoto:</b>
+        <b>Foto:</b>
       </div>
       <div class="col-md-7">
         <input type="file" class="" name="photo" id="photoInput">
@@ -111,7 +102,7 @@ if (isset($_GET["submit"])) {
         <input type="file" class="" name="privacy" id="privacyInput">
       </div>
     </div>
-    <p class="mt-3"><b>Bitte beide Bilddateien, das Portraitfoto <u>und</u> die Einverständniserklärung, <u>gleichzeitig</u> hochladen.</b><br></p>
+    <p class="mt-3"><b>Bitte beide Bilddateien, das Foto <u>und</u> die Einverständniserklärung, <u>gleichzeitig</u> hochladen.</b><br></p>
     <input type="submit" name="submit" class="mt-3 btn btn-outline-success" onclick="showInfo()" value="Hochladen">
     <div class="d-block">
       <span id="info" class="text-primary d-none"><i class="fas fa-spinner fa-spin"></i> Die Dateien werden hochgeladen. Diese Seite nicht schließen!</span>
