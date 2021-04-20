@@ -27,7 +27,7 @@ if (isset($_POST["submit"])) {
     $filetype_privacy = strtolower(pathinfo($_FILES["privacy"]["name"], PATHINFO_EXTENSION));
     $target_privacy = $target_dir . $safeUsername . " Einverstaendniserklaerung." . $filetype_privacy;
 
-    if ($_FILES["photo"]["size"] > 10 * (1024 ** 2) || $_FILES["photo"]["size"] < 500000) {
+    /* if ($_FILES["photo"]["size"] > 10 * (1024 ** 2) || $_FILES["photo"]["size"] < 500000) {
       $error .= " Dein Foto muss zwischen 0.5 MB und 10 MB groß sein.";
     }
     /* if ($_FILES["privacy"]["size"] > 10 * (1024 ** 2) || $_FILES["privacy"]["size"] < 0.5 * (1024 ** 2)) {
