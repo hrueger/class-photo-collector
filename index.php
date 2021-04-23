@@ -14,7 +14,7 @@
         <p>Liebe Schüler*innen, Liebe Lehrkräfte, Liebe Eltern, </p>
         <p>Wie bereits in einem Brief der Schulleitung mitgeteilt wurde, findet aktuell das Projekt "Road to Tokyo" statt. Gemeinsam versuchen wir, eine Strecke bis nach Tokyo zu radeln, zu laufen oder anders zu erreichen. </p>
         <p>Wir, also das Team der Schülerzeitung und das P-Seminar, wollen für die kommende Ausgabe eine Collage zu unserer Aktion gestalten. Hierfür bitten wir euch und Sie, uns lustige, schöne, interessante und verrückte Bilder von euren/Ihren Touren zu schicken. Wir freuen uns auf tolle und kreative Fotos!</p>
-        <p>Diese könnt ihr .... (wie auch immer das geht) hochladen. </p>
+        <p>Diese könnt ihr hier hochladen. </p>
         <p>Die entstandene Collage könnt Ihr/können Sie dann in der Ausgabe des Splitters, die voraussichtlich zum Schuljahresende erscheinen wird, entdecken. </p>
         <p>Vielen Dank für eure/Ihre Mitarbeit! </p>
         <p>Euer Team der Schülerzeitung, das P-Seminar Deutsch und Herr Born</p>
